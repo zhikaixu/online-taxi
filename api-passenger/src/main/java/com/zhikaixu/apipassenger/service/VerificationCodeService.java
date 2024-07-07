@@ -1,6 +1,7 @@
 package com.zhikaixu.apipassenger.service;
 
 import org.json.JSONObject;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.stereotype.Service;
 
 @Service
