@@ -23,7 +23,7 @@ public class VerificationCodeService {
     private ServiceVerificationcodeClient serviceVerificationcodeClient;
 
     @Autowired
-    private StringRedisTemplate stringRedisTemplate;
+    private StringRedisTemplate stringRedisTemplate; // key 和 value 都是string
 
     /**
      * 获取验证码
