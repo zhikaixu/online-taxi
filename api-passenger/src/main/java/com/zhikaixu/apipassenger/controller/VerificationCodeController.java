@@ -1,10 +1,9 @@
 package com.zhikaixu.apipassenger.controller;
 
 import com.zhikaixu.apipassenger.service.VerificationCodeService;
-import com.zhikaixu.apipassenger.request.VerificationCodeDTO;
 import com.zhikaixu.internalcommon.dto.ResponseResult;
+import com.zhikaixu.internalcommon.request.VerificationCodeDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

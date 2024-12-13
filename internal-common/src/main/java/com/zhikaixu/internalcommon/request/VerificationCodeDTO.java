@@ -1,4 +1,4 @@
-package com.zhikaixu.apipassenger.request;
+package com.zhikaixu.internalcommon.request;
 
 import lombok.Data;
 
