@@ -3,6 +3,8 @@ package com.zhikaixu.internalcommon.util;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.Claim;
+import com.auth0.jwt.interfaces.DecodedJWT;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -14,8 +16,13 @@ public class JwtUtils {
     // salt
     private static final String SIGN = "aS#j!!sfd%$$";
 
+    private static final String JWT_KEY = "passengerPhone";
+
     // 生成Token
-    public static String generatorToken(Map<String, String> map) {
+    public static String generatorToken(String passengerPhone) {
+        Map<String, String> map = new HashMap<>();
+        map.put(JWT_KEY, passengerPhone);
+
         // token过期时间
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DATE, 1);
@@ -36,12 +43,18 @@ public class JwtUtils {
     }
 
     // 解析Token
+    public static String parseToken(String token) {
+        DecodedJWT verify = JWT.require(Algorithm.HMAC256(SIGN)).build().verify(token);
+        Claim claim = verify.getClaim(JWT_KEY);
+        return claim.toString();
+    }
+
 
     public static void main(String[] args) {
-        Map<String, String> map = new HashMap<>();
-        map.put("name", "zhikai");
-        map.put("age", "18");
-        String s = generatorToken(map);
-        System.out.println("JWT token: " + s);
+
+        String s = generatorToken("15906669101");
+        System.out.println("生成的JWT token: " + s);
+
+        System.out.println("解析后的值: " + parseToken(s));
     }
 }
