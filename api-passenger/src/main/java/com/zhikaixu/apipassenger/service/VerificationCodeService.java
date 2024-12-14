@@ -1,9 +1,11 @@
 package com.zhikaixu.apipassenger.service;
 
 import com.alibaba.nacos.api.utils.StringUtils;
+import com.zhikaixu.apipassenger.remote.ServicePassengerUserClient;
 import com.zhikaixu.apipassenger.remote.ServiceVerificationcodeClient;
 import com.zhikaixu.internalcommon.constant.CommonStatusEnum;
 import com.zhikaixu.internalcommon.dto.ResponseResult;
+import com.zhikaixu.internalcommon.request.VerificationCodeDTO;
 import com.zhikaixu.internalcommon.response.NumberCodeResponse;
 import com.zhikaixu.internalcommon.response.TokenResponse;
 import org.json.JSONObject;
@@ -24,6 +26,9 @@ public class VerificationCodeService {
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate; // key 和 value 都是string
+
+    @Autowired
+    private ServicePassengerUserClient servicePassengerUserClient;
 
     /**
      * 获取验证码
@@ -68,7 +73,9 @@ public class VerificationCodeService {
         }
 
         // 3. 判断原来是否有用户，并做对应处理
-        System.out.println("判断原来是否有用户，并做对应处理");
+        VerificationCodeDTO verificationCodeDTO = new VerificationCodeDTO();
+        verificationCodeDTO.setPassengerPhone(passengerPhone);
+        servicePassengerUserClient.loginOrRegister(verificationCodeDTO);
 
         // 4. 颁发令牌
         System.out.println("颁发令牌");
