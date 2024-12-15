@@ -4,10 +4,12 @@ import com.alibaba.nacos.api.utils.StringUtils;
 import com.zhikaixu.apipassenger.remote.ServicePassengerUserClient;
 import com.zhikaixu.apipassenger.remote.ServiceVerificationcodeClient;
 import com.zhikaixu.internalcommon.constant.CommonStatusEnum;
+import com.zhikaixu.internalcommon.constant.IdentityConstant;
 import com.zhikaixu.internalcommon.dto.ResponseResult;
 import com.zhikaixu.internalcommon.request.VerificationCodeDTO;
 import com.zhikaixu.internalcommon.response.NumberCodeResponse;
 import com.zhikaixu.internalcommon.response.TokenResponse;
+import com.zhikaixu.internalcommon.util.JwtUtils;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.cache.CacheProperties;
@@ -78,8 +80,9 @@ public class VerificationCodeService {
         servicePassengerUserClient.loginOrRegister(verificationCodeDTO);
 
         // 4. 颁发令牌
-        System.out.println("颁发令牌");
+        String token = JwtUtils.generatorToken(passengerPhone, IdentityConstant.PASSENGER_IDENTITY);
 
+        // 5. 响应
         TokenResponse tokenResponse = new TokenResponse();
         tokenResponse.setToken("token");
         return ResponseResult.success(tokenResponse);
