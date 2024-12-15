@@ -84,9 +84,8 @@ public class VerificationCodeService {
 
         // 5. 响应
         TokenResponse tokenResponse = new TokenResponse();
-        tokenResponse.setToken("token");
+        tokenResponse.setToken(token);
         return ResponseResult.success(tokenResponse);
-//        return null;
     }
 
     private String generateKeyByPhone(String passengerPhone) {
