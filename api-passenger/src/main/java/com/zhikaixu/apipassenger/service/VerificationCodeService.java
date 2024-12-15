@@ -22,7 +22,12 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class VerificationCodeService {
 
+    // 验证码redis key前缀
     private String verificationCodePrefix = "passenger-verification-code-";
+
+    // token redis key前缀
+    private String tokenPredix = "token-";
+
     @Autowired
     private ServiceVerificationcodeClient serviceVerificationcodeClient;
 
@@ -41,6 +46,7 @@ public class VerificationCodeService {
         // 1. 调用验证码服务，获得验证码
         ResponseResult<NumberCodeResponse> numberCodeResponse = serviceVerificationcodeClient.getNumberCode(6);
         int numberCode = numberCodeResponse.getData().getNumberCode();
+        System.out.println("生成的验证码: " + numberCode);
         // 2. 将验证码存入Redis
         stringRedisTemplate.opsForValue().set(generateKeyByPhone(passengerPhone), numberCode+"", 2, TimeUnit.MINUTES);
 
@@ -82,13 +88,33 @@ public class VerificationCodeService {
         // 4. 颁发令牌
         String token = JwtUtils.generatorToken(passengerPhone, IdentityConstant.PASSENGER_IDENTITY);
 
+        // 将token存入redis中
+        String tokenKey = generateTokenKey(passengerPhone, IdentityConstant.PASSENGER_IDENTITY);
+        stringRedisTemplate.opsForValue().set(tokenKey, token, 30, TimeUnit.DAYS);
+
+
         // 5. 响应
         TokenResponse tokenResponse = new TokenResponse();
         tokenResponse.setToken(token);
         return ResponseResult.success(tokenResponse);
     }
 
+    /**
+     * 根据手机号，生成key
+     * @param passengerPhone
+     * @return
+     */
     private String generateKeyByPhone(String passengerPhone) {
         return verificationCodePrefix + passengerPhone;
+    }
+
+    /**
+     * 根据手机号和身份，生成token key
+     * @param phone
+     * @param identity
+     * @return
+     */
+    private String generateTokenKey(String phone, String identity) {
+        return tokenPredix + phone + "-" + identity;
     }
 }
