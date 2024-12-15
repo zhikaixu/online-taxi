@@ -48,11 +48,16 @@ public class JwtUtils {
         return sign;
     }
 
+    // 遇到的问题：在测试时，发现Redis中的token与生成的token一致，但是请求/authTest却报invalid token
+    // 排查步骤：断点->发现拼接key时的手机号以及identity有两个引号了->parseToken的问题->发现是toString()
+    // 原因：拦截器拦截时parseToken的使用了toString(),因此在引号外又包了一层引号，改成asString()
+    // 解决方法：改成asString()
+
     // 解析Token
     public static TokenResult parseToken(String token) {
         DecodedJWT verify = JWT.require(Algorithm.HMAC256(SIGN)).build().verify(token);
-        String phone = verify.getClaim(JWT_KEY_PHONE).toString();
-        String identity = verify.getClaim(JWT_KEY_IDENTITY).toString();
+        String phone = verify.getClaim(JWT_KEY_PHONE).asString();
+        String identity = verify.getClaim(JWT_KEY_IDENTITY).asString();
         TokenResult tokenResult = new TokenResult();
         tokenResult.setPhone(phone);
         tokenResult.setIdentity(identity);
