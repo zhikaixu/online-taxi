@@ -1,4 +1,4 @@
-package com.zhikaixu.servicepassengeruser.dto;
+package com.zhikaixu.internalcommon.dto;
 
 import lombok.Data;
 
@@ -20,4 +20,6 @@ public class PassengerUser {
     private byte passengerGender;
 
     private byte state;
+
+    private String profilePhoto;
 }

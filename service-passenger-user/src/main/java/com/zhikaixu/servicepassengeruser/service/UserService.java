@@ -1,7 +1,7 @@
 package com.zhikaixu.servicepassengeruser.service;
 
 import com.zhikaixu.internalcommon.dto.ResponseResult;
-import com.zhikaixu.servicepassengeruser.dto.PassengerUser;
+import com.zhikaixu.internalcommon.dto.PassengerUser;
 import com.zhikaixu.servicepassengeruser.mapper.PassengerUserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
