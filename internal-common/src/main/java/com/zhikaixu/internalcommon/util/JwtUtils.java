@@ -72,13 +72,11 @@ public class JwtUtils {
         return tokenResult;
     }
 
-    // TODO: need review
     public static TokenResult checkToken(String token) {
         TokenResult tokenResult = null;
         try {
             tokenResult = JwtUtils.parseToken(token);
         } catch (Exception e) {
-//            return null;
         }
         return tokenResult;
     }

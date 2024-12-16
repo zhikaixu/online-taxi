@@ -39,7 +39,6 @@ public class TokenService {
         }
 
         // 生成双token
-        // TODO: 这里的token是跟之前一样的
         String refreshToken = JwtUtils.generatorToken(phone, identity, TokenConstants.REFRESH_TOKEN_TYPE);
         String accessToken = JwtUtils.generatorToken(phone, identity, TokenConstants.ACCESS_TOKEN_TYPE);
 
