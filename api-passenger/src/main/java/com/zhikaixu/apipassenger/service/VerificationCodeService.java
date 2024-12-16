@@ -5,6 +5,7 @@ import com.zhikaixu.apipassenger.remote.ServicePassengerUserClient;
 import com.zhikaixu.apipassenger.remote.ServiceVerificationcodeClient;
 import com.zhikaixu.internalcommon.constant.CommonStatusEnum;
 import com.zhikaixu.internalcommon.constant.IdentityConstant;
+import com.zhikaixu.internalcommon.constant.TokenConstants;
 import com.zhikaixu.internalcommon.dto.ResponseResult;
 import com.zhikaixu.internalcommon.request.VerificationCodeDTO;
 import com.zhikaixu.internalcommon.response.NumberCodeResponse;
@@ -78,16 +79,20 @@ public class VerificationCodeService {
         servicePassengerUserClient.loginOrRegister(verificationCodeDTO);
 
         // 4. 颁发令牌
-        String token = JwtUtils.generatorToken(passengerPhone, IdentityConstant.PASSENGER_IDENTITY);
+        String accessToken = JwtUtils.generatorToken(passengerPhone, IdentityConstant.PASSENGER_IDENTITY, TokenConstants.ACCESS_TOKEN_TYPE);
+        String refreshToken = JwtUtils.generatorToken(passengerPhone, IdentityConstant.PASSENGER_IDENTITY, TokenConstants.REFRESH_TOKEN_TYPE);
 
         // 将token存入redis中
-        String tokenKey = RedisPrefixUtils.generateTokenKey(passengerPhone, IdentityConstant.PASSENGER_IDENTITY);
-        stringRedisTemplate.opsForValue().set(tokenKey, token, 30, TimeUnit.DAYS);
+        String accessTokenKey = RedisPrefixUtils.generateTokenKey(passengerPhone, IdentityConstant.PASSENGER_IDENTITY, TokenConstants.ACCESS_TOKEN_TYPE);
+        stringRedisTemplate.opsForValue().set(accessTokenKey, accessToken, 30, TimeUnit.DAYS);
 
+        String refreshTokenKey = RedisPrefixUtils.generateTokenKey(passengerPhone, IdentityConstant.PASSENGER_IDENTITY, TokenConstants.REFRESH_TOKEN_TYPE);
+        stringRedisTemplate.opsForValue().set(refreshTokenKey, refreshToken, 31, TimeUnit.DAYS);
 
         // 5. 响应
         TokenResponse tokenResponse = new TokenResponse();
-        tokenResponse.setToken(token);
+        tokenResponse.setAccessToken(accessToken);
+        tokenResponse.setRefreshToken(refreshToken);
         return ResponseResult.success(tokenResponse);
     }
 }
