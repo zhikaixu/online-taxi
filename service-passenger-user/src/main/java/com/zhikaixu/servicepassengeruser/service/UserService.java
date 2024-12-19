@@ -1,5 +1,6 @@
 package com.zhikaixu.servicepassengeruser.service;
 
+import com.zhikaixu.internalcommon.constant.CommonStatusEnum;
 import com.zhikaixu.internalcommon.dto.ResponseResult;
 import com.zhikaixu.internalcommon.dto.PassengerUser;
 import com.zhikaixu.servicepassengeruser.mapper.PassengerUserMapper;
@@ -43,6 +44,26 @@ public class UserService {
         }
 
         return ResponseResult.success();
+    }
+
+    /**
+     * 根据手机号查询用户信息
+     * @param passengerPhone
+     * @return
+     */
+    public ResponseResult getUserByPhone(String passengerPhone) {
+        // 根据手机号查询用户信息
+        Map<String, Object> map = new HashMap<>();
+        map.put("passenger_phone", passengerPhone);
+        List<PassengerUser> passengerUsers = passengerUserMapper.selectByMap(map);
+        if (passengerUsers.size() == 0) {
+            return ResponseResult.fail(CommonStatusEnum.USER_NOT_EXISTS.getCode(), CommonStatusEnum.USER_NOT_EXISTS.getValue());
+        } else {
+            PassengerUser passengerUser = passengerUsers.get(0);
+            return ResponseResult.success(passengerUser);
+        }
+
+
     }
 
 }
