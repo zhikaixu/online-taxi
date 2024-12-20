@@ -1,6 +1,8 @@
 package com.zhikaixu.apipassenger.service;
 
 import com.zhikaixu.internalcommon.dto.ResponseResult;
+import com.zhikaixu.internalcommon.request.ForecastPriceDTO;
+import com.zhikaixu.internalcommon.response.DirectionResponse;
 import com.zhikaixu.internalcommon.response.ForecastPriceResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,12 +27,6 @@ public class ForecastPriceService {
         log.info("目的地纬度：" + destLatitude);
 
         log.info("调用计价服务，计算价格");
-
-//        log.info("");
-
-//        log.info("");
-
-//        log.info("");
 
         ForecastPriceResponse forecastPriceResponse = new ForecastPriceResponse();
         forecastPriceResponse.setPrice(12.34);
