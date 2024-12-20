@@ -40,3 +40,8 @@ build/
 
 ### application.yml
 #application.yml
+derby.log
+
+*.log
+
+*.rdb
