@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,5 +24,13 @@ public class UserController {
         JSONObject jsonObject = new JSONObject(driverUser);
         log.info(jsonObject.toString());
         return driverUserService.addDriverUser(driverUser);
+    }
+
+    @PutMapping("/user")
+    public ResponseResult updateUser(@RequestBody DriverUser driverUser) {
+        JSONObject jsonObject = new JSONObject(driverUser);
+        log.info(jsonObject.toString());
+
+        return driverUserService.updateDriverUser(driverUser);
     }
 }
