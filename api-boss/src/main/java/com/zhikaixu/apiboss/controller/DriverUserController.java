@@ -1,6 +1,8 @@
 package com.zhikaixu.apiboss.controller;
 
+import com.zhikaixu.apiboss.service.CarService;
 import com.zhikaixu.apiboss.service.DriverUserService;
+import com.zhikaixu.internalcommon.dto.Car;
 import com.zhikaixu.internalcommon.dto.DriverUser;
 import com.zhikaixu.internalcommon.dto.ResponseResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,5 +36,13 @@ public class DriverUserController {
     public ResponseResult updateDriverUser(@RequestBody DriverUser driverUser) {
 
         return driverUserService.updateDriverUser(driverUser);
+    }
+
+    @Autowired
+    private CarService carService;
+
+    @PostMapping("/car")
+    public ResponseResult addCar(@RequestBody Car car) {
+        return carService.addCar(car);
     }
 }
