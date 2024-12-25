@@ -3,18 +3,19 @@ package com.zhikaixu.internalcommon.util;
 public class RedisPrefixUtils {
 
     // 验证码redis key前缀
-    private static String verificationCodePrefix = "passenger-verification-code-";
+    private static String verificationCodePrefix = "verification-code-";
 
     // token redis key前缀
     private static String tokenPredix = "token-";
 
     /**
      * 根据手机号，生成key
-     * @param passengerPhone
+     * @param phone
+     * @param identity
      * @return
      */
-    public static String generateKeyByPhone(String passengerPhone) {
-        return verificationCodePrefix + passengerPhone;
+    public static String generateKeyByPhone(String phone, String identity) {
+        return verificationCodePrefix + identity + "-" + phone;
     }
 
     /**
