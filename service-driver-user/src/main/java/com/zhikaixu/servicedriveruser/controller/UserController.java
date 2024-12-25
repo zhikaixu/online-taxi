@@ -1,5 +1,6 @@
 package com.zhikaixu.servicedriveruser.controller;
 
+import com.zhikaixu.internalcommon.constant.DriverCarConstants;
 import com.zhikaixu.internalcommon.dto.DriverUser;
 import com.zhikaixu.internalcommon.dto.ResponseResult;
 import com.zhikaixu.internalcommon.response.DriverUserExistsResponse;
@@ -33,15 +34,15 @@ public class UserController {
     }
 
     @GetMapping("/check-driver/{driverPhone}")
-    public ResponseResult getUser(@PathVariable("driverPhone") String driverPhone) {
+    public ResponseResult<DriverUserExistsResponse> getUser(@PathVariable("driverPhone") String driverPhone) {
 
         ResponseResult<DriverUser> driverUserByPhone = driverUserService.getDriverUserByPhone(driverPhone);
         DriverUser driverUserDb = driverUserByPhone.getData();
 
         DriverUserExistsResponse response = new DriverUserExistsResponse();
-        int ifExists = 1;
+        int ifExists = DriverCarConstants.DRIVER_EXISTS;
         if (driverUserDb == null) {
-            ifExists = 0;
+            ifExists = DriverCarConstants.DRIVER_NOT_EXISTS;
             response.setDriverPhone(driverPhone);
             response.setIfExists(ifExists);
         } else {
