@@ -21,7 +21,7 @@ public class MysqlGenerator {
                             "/Users/zhikaixu/Desktop/online-taxi-backup/service-driver-user/src/main/java/com/zhikaixu/servicedriveruser/mapper"));
                 })
                 .strategyConfig(builder -> {
-                    builder.addInclude("driver_car_binding_relationship");
+                    builder.addInclude("driver_user_work_status");
                 })
                 .templateEngine(new FreemarkerTemplateEngine())
                 .execute();
