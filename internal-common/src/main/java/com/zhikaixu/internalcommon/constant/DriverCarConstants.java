@@ -32,4 +32,19 @@ public class DriverCarConstants {
      */
     public static int DRIVER_NOT_EXISTS = 0;
 
+    /**
+     * 司机工作状态：开始接单
+     */
+    public static int DRIVER_WORK_STATUS_START = 1;
+
+    /**
+     * 司机工作状态：收车
+     */
+    public static int DRIVER_WORK_STATUS_STOP = 0;
+
+    /**
+     * 司机工作状态：暂停接单
+     */
+    public static int DRIVER_WORK_STATUS_SUSPEND = 2;
+
 }
