@@ -1,9 +1,7 @@
 package com.zhikaixu.servicemap.remote;
 
-import com.alibaba.cloud.commons.lang.StringUtils;
 import com.zhikaixu.internalcommon.constant.AmapConfigConstants;
 import com.zhikaixu.internalcommon.dto.ResponseResult;
-import com.zhikaixu.internalcommon.response.TerminalResponse;
 import com.zhikaixu.internalcommon.response.TrackResponse;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +43,7 @@ public class TrackClient {
         String trname = !data.has("trname") ? "": data.getString("trname");
 
         TrackResponse trackResponse = new TrackResponse();
-        trackResponse.setTid(trid);
+        trackResponse.setTrid(trid);
         trackResponse.setTrname(trname);
         return ResponseResult.success(trackResponse);
     }

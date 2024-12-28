@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class TrackResponse {
 
-    private String tid;
+    private String trid;
 
     private String trname;
 }
