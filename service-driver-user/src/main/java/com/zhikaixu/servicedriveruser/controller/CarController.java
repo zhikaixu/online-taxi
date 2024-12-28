@@ -31,9 +31,7 @@ public class CarController {
 
     @PostMapping("/car")
     public ResponseResult addCar(@RequestBody Car car) {
-        LocalDateTime now = LocalDateTime.now();
-        car.setGmtCreate(now);
-        car.setGmtModified(now);
+
         return carService.addCar(car);
     }
 }

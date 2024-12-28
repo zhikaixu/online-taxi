@@ -22,7 +22,7 @@ public class TerminalClient {
     @Autowired
     private RestTemplate restTemplate;
 
-    public ResponseResult add(String name) {
+    public ResponseResult<TerminalResponse> add(String name) {
 
         // 拼装请求的url
         StringBuilder url = new StringBuilder();
