@@ -1,0 +1,20 @@
+服务创建
+{
+  "errcode": 10000,
+  "errmsg": "OK",
+  "data": {
+    "name": "网约车出行service",
+    "sid": 1044135
+  }
+}
+
+终端创建
+{
+    "errcode": 10000,
+    "errmsg": "OK",
+    "data": {
+        "name": "车辆1",
+        "tid": 1125251016,
+        "sid": 1044135
+    }
+}
