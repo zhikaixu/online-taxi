@@ -24,10 +24,12 @@ public class CarService {
         car.setGmtCreate(now);
         car.setGmtModified(now);
 
-        // 获得此车辆对应的tid
+        // 获得此车辆对应的终端id：tid
         ResponseResult<TerminalResponse> responseResult = serviceMapClient.addTerminal(car.getVehicleNo());
         String tid = responseResult.getData().getTid();
         car.setTid(tid);
+
+        // 获得此车辆的轨迹id：trid
 
         carMapper.insert(car);
         return ResponseResult.success("");
