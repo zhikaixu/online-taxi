@@ -13,8 +13,76 @@
     "errcode": 10000,
     "errmsg": "OK",
     "data": {
-        "name": "车辆1",
-        "tid": 1125251016,
+        "name": "车辆4",
+        "tid": 1127921213,
         "sid": 1044135
+    }
+}
+
+轨迹创建
+{
+    "errcode": 10000,
+    "errmsg": "OK",
+    "data": {
+        "trname": "车辆4轨迹",
+        "trid": 180
+    }
+}
+
+轨迹点上传
+"location": "116.396423,39.927047",
+"locatetime": 1735425499657
+
+周边搜索终端
+{
+    "errcode": 10000,
+    "errmsg": "OK",
+    "data": {
+        "results": [
+            {
+                "tid": 1127897119,
+                "name": "京A12366",
+                "createtime": 1735417134369,
+                "locatetime": 1735419582244,
+                "location": {
+                    "latitude": 39.927047,
+                    "longitude": 116.396423,
+                    "speed": 255.0,
+                    "direction": 511.0,
+                    "accuracy": 550.0,
+                    "distance": 0
+                }
+            },
+            {
+                "tid": 1125241166,
+                "name": "车辆2",
+                "createtime": 1735242558392,
+                "locatetime": 1735244343433,
+                "location": {
+                    "latitude": 39.927047,
+                    "longitude": 116.396423,
+                    "speed": 255.0,
+                    "direction": 511.0,
+                    "accuracy": 550.0,
+                    "distance": 0
+                }
+            },
+            {
+                "tid": 1127921213,
+                "name": "车辆4",
+                "desc": "100001",
+                "createtime": 1735425268710,
+                "locatetime": 1735425499657,
+                "location": {
+                    "latitude": 39.927047,
+                    "longitude": 116.396423,
+                    "speed": 255.0,
+                    "direction": 511.0,
+                    "accuracy": 550.0,
+                    "distance": 0
+                }
+            }
+        ],
+        "count": 3
     }
 }
