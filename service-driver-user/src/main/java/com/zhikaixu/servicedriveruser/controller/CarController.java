@@ -5,12 +5,9 @@ import com.zhikaixu.internalcommon.dto.Car;
 import com.zhikaixu.internalcommon.dto.ResponseResult;
 import com.zhikaixu.servicedriveruser.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -33,5 +30,10 @@ public class CarController {
     public ResponseResult addCar(@RequestBody Car car) {
 
         return carService.addCar(car);
+    }
+
+    @GetMapping("/car/{carId}")
+    public ResponseResult<Car> getCarById(@PathVariable("carId") Long carId) {
+        return carService.getCarById(carId);
     }
 }
