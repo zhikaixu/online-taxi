@@ -61,6 +61,6 @@ public class PointClient {
         String body = stringResponseEntity.getBody();
         System.out.println("高德地图响应：" + body);
 
-        return ResponseResult.success();
+        return ResponseResult.success("");
     }
 }
