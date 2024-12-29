@@ -22,7 +22,7 @@ public class TerminalClient {
     @Autowired
     private RestTemplate restTemplate;
 
-    public ResponseResult<TerminalResponse> add(String name) {
+    public ResponseResult<TerminalResponse> add(String name, String desc) {
 
         // 拼装请求的url
         StringBuilder url = new StringBuilder();
@@ -33,7 +33,9 @@ public class TerminalClient {
         url.append("sid=" + sid);
         url.append("&");
         url.append("name=" + name);
-
+        url.append("&");
+        url.append("desc=" + desc);
+        System.out.println("创建终端请求：" + url);
         ResponseEntity<String> stringResponseEntity = restTemplate.postForEntity(url.toString(), null, String.class);
         /**
         {
@@ -49,6 +51,7 @@ public class TerminalClient {
         String body = stringResponseEntity.getBody();
         JSONObject result = new JSONObject(body);
         JSONObject data = result.getJSONObject("data");
+        System.out.println("创建终端响应：" + data);
         String tid = String.valueOf(data.getInt("tid"));
         TerminalResponse terminalResponse = new TerminalResponse();
         terminalResponse.setTid(tid);
