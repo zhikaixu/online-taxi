@@ -36,7 +36,4 @@ public class OrderInfoController {
         return orderInfoService.add(orderRequest);
     }
 
-    @Autowired
-    private OrderInfoService orderService;
-
 }
