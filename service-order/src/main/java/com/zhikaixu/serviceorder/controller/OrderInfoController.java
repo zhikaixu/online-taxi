@@ -19,7 +19,10 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequestMapping("/order")
-public class OrderController {
+public class OrderInfoController {
+
+    @Autowired
+    private OrderInfoService orderInfoService;
 
     /**
      * 创建订单
@@ -29,7 +32,8 @@ public class OrderController {
     @PostMapping("/add")
     public ResponseResult add(@RequestBody OrderRequest orderRequest) {
         log.info("service-order:" + orderRequest.getAddress());
-        return ResponseResult.success("");
+
+        return orderInfoService.add(orderRequest);
     }
 
     @Autowired
