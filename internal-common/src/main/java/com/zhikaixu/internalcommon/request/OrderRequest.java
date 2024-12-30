@@ -48,4 +48,7 @@ public class OrderRequest {
 
     // 运价类型编码
     private String fareType;
+
+    // 运价版本
+    private Integer fareVersion;
 }
