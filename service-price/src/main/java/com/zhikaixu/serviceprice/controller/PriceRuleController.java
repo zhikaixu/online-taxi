@@ -5,12 +5,7 @@ import com.zhikaixu.internalcommon.dto.PriceRule;
 import com.zhikaixu.internalcommon.dto.ResponseResult;
 import com.zhikaixu.serviceprice.service.PriceRuleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -37,5 +32,28 @@ public class PriceRuleController {
     public ResponseResult edit(@RequestBody PriceRule priceRule) {
 
         return priceRuleService.edit(priceRule);
+    }
+
+    /**
+     * 查询最新的计价规则
+     * @param fareType
+     * @return
+     */
+    @GetMapping("/get-lastest-version")
+    public ResponseResult getLatestVersion(@RequestParam String fareType) {
+
+        return priceRuleService.getLatestVersion(fareType);
+    }
+
+    /**
+     * 判断计价规则是否是最新
+     * @param fareType
+     * @param fareVersion
+     * @return
+     */
+    @GetMapping("/is-new")
+    public ResponseResult<Boolean> isNew(@RequestParam String fareType, Integer fareVersion) {
+
+        return priceRuleService.isNew(fareType, fareVersion);
     }
 }
