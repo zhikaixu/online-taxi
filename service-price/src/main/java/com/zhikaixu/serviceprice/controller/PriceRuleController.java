@@ -52,7 +52,7 @@ public class PriceRuleController {
      * @return
      */
     @GetMapping("/is-new")
-    public ResponseResult<Boolean> isNew(@RequestParam String fareType, Integer fareVersion) {
+    public ResponseResult<Boolean> isNew(@RequestParam String fareType, @RequestParam Integer fareVersion) {
 
         return priceRuleService.isNew(fareType, fareVersion);
     }

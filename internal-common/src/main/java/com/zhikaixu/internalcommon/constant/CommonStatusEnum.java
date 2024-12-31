@@ -28,6 +28,8 @@ public enum CommonStatusEnum {
 
     PRICE_RULE_NOT_EDIT(1302, "计价规则没有变化"),
 
+    PRICE_RULE_CHANGED(1303, "计划规则有变化"),
+
     /**
      * 地图信息: 1400-1499
      */
