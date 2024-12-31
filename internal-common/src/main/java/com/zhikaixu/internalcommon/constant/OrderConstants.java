@@ -2,6 +2,9 @@ package com.zhikaixu.internalcommon.constant;
 
 public class OrderConstants {
 
+    // 订单无效
+    public static final int ORDER_INVALID = 0;
+
     // 订单开始
     public static final int ORDER_START = 1;
 

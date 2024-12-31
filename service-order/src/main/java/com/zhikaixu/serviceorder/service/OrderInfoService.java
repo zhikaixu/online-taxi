@@ -1,5 +1,6 @@
 package com.zhikaixu.serviceorder.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.zhikaixu.internalcommon.constant.CommonStatusEnum;
 import com.zhikaixu.internalcommon.constant.OrderConstants;
 import com.zhikaixu.internalcommon.dto.OrderInfo;
@@ -36,6 +37,14 @@ public class OrderInfoService {
         if (!(isNew.getData())) {
             return ResponseResult.fail(CommonStatusEnum.PRICE_RULE_CHANGED.getCode(), CommonStatusEnum.PRICE_RULE_CHANGED.getValue());
         }
+
+        // 判断有正在进行的订单，不允许下单
+
+        if (isOrderGoingon(orderRequest.getPassengerId()) > 0) {
+            return ResponseResult.fail(CommonStatusEnum.ORDER_GOING_ON.getCode(), CommonStatusEnum.ORDER_GOING_ON.getValue());
+        }
+
+
         // 创建订单
         OrderInfo orderInfo = new OrderInfo();
 
@@ -49,5 +58,23 @@ public class OrderInfoService {
 
         orderInfoMapper.insert(orderInfo);
         return ResponseResult.success("");
+    }
+
+    private int isOrderGoingon(Long passengerId) {
+        // 判断有正在进行的订单，不允许下单
+        QueryWrapper<OrderInfo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("passenger_id", passengerId);
+        queryWrapper.and(wrapper->wrapper.eq("order_status", OrderConstants.ORDER_START)
+                .or().eq("order_status", OrderConstants.DRIVER_RECEIVE_ORDER)
+                .or().eq("order_status", OrderConstants.DRIVER_TO_PICK_UP_PASSENGER)
+                .or().eq("order_status", OrderConstants.DRIVER_ARRIVED_DEPARTURE)
+                .or().eq("order_status", OrderConstants.PICK_UP_PASSENGER)
+                .or().eq("order_status", OrderConstants.PASSENGER_GETOFF)
+                .or().eq("order_status", OrderConstants.TO_START_PAY)
+        );
+
+        Integer validOrderNumber = orderInfoMapper.selectCount(queryWrapper);
+        return validOrderNumber;
+
     }
 }

@@ -13,3 +13,6 @@ spring:
     password: root
   application:
     name: service-order
+logging:
+  level:
+    com.baomidou: debug
