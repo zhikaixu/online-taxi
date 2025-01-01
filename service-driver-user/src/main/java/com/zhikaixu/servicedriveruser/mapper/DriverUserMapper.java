@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DriverUserMapper extends BaseMapper<DriverUser> {
+
+    public Integer select1(String arg);
 }
