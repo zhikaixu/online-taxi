@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.zhikaixu.internalcommon.constant.CommonStatusEnum;
 import com.zhikaixu.internalcommon.constant.OrderConstants;
 import com.zhikaixu.internalcommon.dto.OrderInfo;
+import com.zhikaixu.internalcommon.dto.PriceRule;
 import com.zhikaixu.internalcommon.dto.ResponseResult;
 import com.zhikaixu.internalcommon.request.OrderRequest;
 import com.zhikaixu.internalcommon.util.RedisPrefixUtils;
@@ -44,22 +45,19 @@ public class OrderInfoService {
             return ResponseResult.fail(CommonStatusEnum.PRICE_RULE_CHANGED.getCode(), CommonStatusEnum.PRICE_RULE_CHANGED.getValue());
         }
 
+        // 设置key，校验原来有没有key
+        if (isBlackDevice(orderRequest)) {
+            return ResponseResult.fail(CommonStatusEnum.DEVICE_IS_BLACK.getCode(), CommonStatusEnum.DEVICE_IS_BLACK.getValue());
+        }
+
+        if (!isPriceRuleExists(orderRequest)) {
+            return ResponseResult.fail(CommonStatusEnum.CITY_SERVICE_NOT_SERVE.getCode(), CommonStatusEnum.CITY_SERVICE_NOT_SERVE.getValue());
+        }
+
         // 判断有正在进行的订单，不允许下单
         if (isOrderGoingon(orderRequest.getPassengerId()) > 0) {
             return ResponseResult.fail(CommonStatusEnum.ORDER_GOING_ON.getCode(), CommonStatusEnum.ORDER_GOING_ON.getValue());
         }
-
-        // 判断下单的设备是否是黑名单设备
-        String deviceCode = orderRequest.getDeviceCode();
-        // 生成key
-        String deviceCodeKey = RedisPrefixUtils.blackDeviceCodePredix + deviceCode;
-        // 设置key，校验原来有没有key
-        if (isBlackDevice(deviceCodeKey)) {
-            return ResponseResult.fail(CommonStatusEnum.DEVICE_IS_BLACK.getCode(), CommonStatusEnum.DEVICE_IS_BLACK.getValue());
-        }
-
-        stringRedisTemplate.opsForValue().setIfAbsent(deviceCodeKey, "1");
-
         // 创建订单
 //        OrderInfo orderInfo = new OrderInfo();
 //
@@ -93,7 +91,11 @@ public class OrderInfoService {
 
     }
 
-    private boolean isBlackDevice(String deviceCodeKey) {
+    private boolean isBlackDevice(OrderRequest orderRequest) {
+        // 判断下单的设备是否是黑名单设备
+        String deviceCode = orderRequest.getDeviceCode();
+        // 生成key
+        String deviceCodeKey = RedisPrefixUtils.blackDeviceCodePredix + deviceCode;
         Boolean b = stringRedisTemplate.hasKey(deviceCodeKey);
         if (b) {
             String s = stringRedisTemplate.opsForValue().get(deviceCodeKey);
@@ -108,5 +110,18 @@ public class OrderInfoService {
             stringRedisTemplate.opsForValue().setIfAbsent(deviceCodeKey, "1", 1L, TimeUnit.HOURS);
         }
         return false;
+    }
+
+    private boolean isPriceRuleExists(OrderRequest orderRequest) {
+        String fareType = orderRequest.getFareType();
+        int index = fareType.indexOf("$");
+        String cityCode = fareType.substring(0, index);
+        String vehicleType = fareType.substring(index + 1);
+
+        PriceRule priceRule = new PriceRule();
+        priceRule.setCityCode(cityCode);
+        priceRule.setVehicleType(vehicleType);
+        ResponseResult<Boolean> booleanResponseResult = servicePriceClient.ifPriceExists(priceRule);
+        return booleanResponseResult.getData();
     }
 }

@@ -1,8 +1,10 @@
 package com.zhikaixu.serviceorder.remote;
 
+import com.zhikaixu.internalcommon.dto.PriceRule;
 import com.zhikaixu.internalcommon.dto.ResponseResult;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -12,4 +14,7 @@ public interface ServicePriceClient {
 
     @GetMapping("/is-new")
     public ResponseResult<Boolean> isNew(@RequestParam String fareType, @RequestParam Integer fareVersion);
+
+    @GetMapping("/if-exists")
+    public ResponseResult<Boolean> ifPriceExists(@RequestBody PriceRule priceRule);
 }
