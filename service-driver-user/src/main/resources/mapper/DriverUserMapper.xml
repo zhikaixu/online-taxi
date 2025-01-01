@@ -6,4 +6,8 @@
         select count(*) from v_city_driver_work_status where city_code = #{cityCode}
     </select>
 
+    <select id="selectDriverUserCountByCityCode" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(*) from v_city_driver_work_status where city_code = #{cityCode}
+    </select>
+
 </mapper>

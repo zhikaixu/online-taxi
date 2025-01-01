@@ -9,7 +9,9 @@ import com.zhikaixu.internalcommon.dto.ResponseResult;
 import com.zhikaixu.internalcommon.request.OrderRequest;
 import com.zhikaixu.internalcommon.util.RedisPrefixUtils;
 import com.zhikaixu.serviceorder.mapper.OrderInfoMapper;
+import com.zhikaixu.serviceorder.remote.ServiceDriverUserClient;
 import com.zhikaixu.serviceorder.remote.ServicePriceClient;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -26,6 +28,7 @@ import java.util.concurrent.TimeUnit;
  * @author zhikaixu
  * @since 2024-12-30
  */
+@Slf4j
 @Service
 public class OrderInfoService {
 
@@ -38,7 +41,17 @@ public class OrderInfoService {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
+    @Autowired
+    ServiceDriverUserClient serviceDriverUserClient;
+
     public ResponseResult add(OrderRequest orderRequest) {
+        // 判断城市是否有司机
+        ResponseResult<Boolean> driverAvailable = serviceDriverUserClient.isDriverAvailable(orderRequest.getAddress());
+        log.info("判断城市是否有司机结果: " + driverAvailable.getData());
+        if (!driverAvailable.getData()) {
+            return ResponseResult.fail(CommonStatusEnum.CITY_DRIVER_EMPTY.getCode(), CommonStatusEnum.CITY_DRIVER_EMPTY.getValue());
+        }
+
         // 需要判断计价规则的版本是否为最新
         ResponseResult<Boolean> isNew = servicePriceClient.isNew(orderRequest.getFareType(), orderRequest.getFareVersion());
         if (!(isNew.getData())) {
@@ -50,6 +63,7 @@ public class OrderInfoService {
             return ResponseResult.fail(CommonStatusEnum.DEVICE_IS_BLACK.getCode(), CommonStatusEnum.DEVICE_IS_BLACK.getValue());
         }
 
+        // 判断下单的城市和计价规则是否正常
         if (!isPriceRuleExists(orderRequest)) {
             return ResponseResult.fail(CommonStatusEnum.CITY_SERVICE_NOT_SERVE.getCode(), CommonStatusEnum.CITY_SERVICE_NOT_SERVE.getValue());
         }
