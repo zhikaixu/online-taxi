@@ -7,9 +7,11 @@ import com.zhikaixu.internalcommon.dto.OrderInfo;
 import com.zhikaixu.internalcommon.dto.PriceRule;
 import com.zhikaixu.internalcommon.dto.ResponseResult;
 import com.zhikaixu.internalcommon.request.OrderRequest;
+import com.zhikaixu.internalcommon.response.TerminalResponse;
 import com.zhikaixu.internalcommon.util.RedisPrefixUtils;
 import com.zhikaixu.serviceorder.mapper.OrderInfoMapper;
 import com.zhikaixu.serviceorder.remote.ServiceDriverUserClient;
+import com.zhikaixu.serviceorder.remote.ServiceMapClient;
 import com.zhikaixu.serviceorder.remote.ServicePriceClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -18,6 +20,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -73,17 +76,21 @@ public class OrderInfoService {
             return ResponseResult.fail(CommonStatusEnum.ORDER_GOING_ON.getCode(), CommonStatusEnum.ORDER_GOING_ON.getValue());
         }
         // 创建订单
-//        OrderInfo orderInfo = new OrderInfo();
-//
-//        BeanUtils.copyProperties(orderRequest, orderInfo);
-//
-//        orderInfo.setOrderStatus(OrderConstants.ORDER_START);
-//
-//        LocalDateTime now = LocalDateTime.now();
-//        orderInfo.setGmtCreate(now);
-//        orderInfo.setGmtModified(now);
-//
-//        orderInfoMapper.insert(orderInfo);
+        OrderInfo orderInfo = new OrderInfo();
+
+        BeanUtils.copyProperties(orderRequest, orderInfo);
+
+        orderInfo.setOrderStatus(OrderConstants.ORDER_START);
+
+        LocalDateTime now = LocalDateTime.now();
+        orderInfo.setGmtCreate(now);
+        orderInfo.setGmtModified(now);
+
+        orderInfoMapper.insert(orderInfo);
+
+        // 派单
+        dispatchRealTimeOrder(orderInfo);
+
         return ResponseResult.success("");
     }
 
@@ -138,4 +145,36 @@ public class OrderInfoService {
         ResponseResult<Boolean> booleanResponseResult = servicePriceClient.ifPriceExists(priceRule);
         return booleanResponseResult.getData();
     }
+
+    @Autowired
+    private ServiceMapClient serviceMapClient;
+
+    /**
+     * 实时订单排单逻辑
+     * @param orderInfo
+     */
+    public void dispatchRealTimeOrder(OrderInfo orderInfo) {
+
+        // 2km
+        String depLatitude = orderInfo.getDepLatitude();
+        String depLongitude = orderInfo.getDepLongitude();
+        int radius = 2000;
+        String center = depLatitude + "," + depLongitude;
+
+        ResponseResult<List<TerminalResponse>> listResponseResult = serviceMapClient.terminalAroundSearch(center, radius);
+        List<TerminalResponse> data = listResponseResult.getData();
+        if (data.isEmpty()) {
+            radius = 4000;
+            listResponseResult = serviceMapClient.terminalAroundSearch(center, radius);
+            if (listResponseResult.getData().isEmpty()) {
+                radius = 5000;
+                listResponseResult = serviceMapClient.terminalAroundSearch(center, radius);
+                if (listResponseResult.getData().isEmpty()) {
+                    log.info("此轮排单没找到车，找了2km, 4km, 5km");
+                }
+            }
+        }
+
+    }
+
 }

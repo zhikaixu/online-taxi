@@ -79,6 +79,7 @@ public class TerminalClient {
         ResponseEntity<String> stringResponseEntity = restTemplate.postForEntity(url.toString(), null, String.class);
         String body = stringResponseEntity.getBody();
         JSONObject result = new JSONObject(body);
+        System.out.println("创建终端响应：" + result);
         JSONObject data = result.getJSONObject("data");
         System.out.println("创建终端响应：" + data);
 
