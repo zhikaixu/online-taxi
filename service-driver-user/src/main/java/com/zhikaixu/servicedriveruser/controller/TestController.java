@@ -27,8 +27,9 @@ public class TestController {
     }
 
     // 测试mapper中的xml是否正常使用
+    // http://localhost:8086/test-xml?cityCode=110000
     @GetMapping("/test-xml")
-    public int testXml(String args) {
-        return driverUserMapper.select1("1");
+    public int testXml(String cityCode) {
+        return driverUserMapper.select1(cityCode);
     }
 }
