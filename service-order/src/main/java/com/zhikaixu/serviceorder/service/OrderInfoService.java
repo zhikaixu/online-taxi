@@ -20,6 +20,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -158,23 +159,36 @@ public class OrderInfoService {
         // 2km
         String depLatitude = orderInfo.getDepLatitude();
         String depLongitude = orderInfo.getDepLongitude();
-        int radius = 2000;
         String center = depLatitude + "," + depLongitude;
 
-        ResponseResult<List<TerminalResponse>> listResponseResult = serviceMapClient.terminalAroundSearch(center, radius);
-        List<TerminalResponse> data = listResponseResult.getData();
-        if (data.isEmpty()) {
-            radius = 4000;
+        List<Integer> radiusList = new ArrayList<>();
+        radiusList.add(2000);
+        radiusList.add(4000);
+        radiusList.add(5000);
+
+        ResponseResult<List<TerminalResponse>> listResponseResult = null;
+        for (int i = 0; i < radiusList.size(); i++) {
+            Integer radius = radiusList.get(i);
             listResponseResult = serviceMapClient.terminalAroundSearch(center, radius);
-            if (listResponseResult.getData().isEmpty()) {
-                radius = 5000;
-                listResponseResult = serviceMapClient.terminalAroundSearch(center, radius);
-                if (listResponseResult.getData().isEmpty()) {
-                    log.info("此轮排单没找到车，找了2km, 4km, 5km");
-                }
-            }
+
+            log.info("在半径为" + radius + "寻找车辆");
+            // 获得终端
+
+            // 解析终端
+
+            // 根据解析出来的终端，查询车辆信息
+
+            // 找到符合的车辆，进行派单
+
+            // 如果派单成功，则退出循环
         }
 
+        List<TerminalResponse> data = listResponseResult.getData();
+        if (data.isEmpty()) {
+            log.info("此轮排单没找到车，找了2km, 4km, 5km");
+        } else {
+            log.info("此轮排单找到了车");
+        }
     }
 
 }
