@@ -1,6 +1,7 @@
 package com.zhikaixu.serviceorder.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.google.gson.Gson;
 import com.zhikaixu.internalcommon.constant.CommonStatusEnum;
 import com.zhikaixu.internalcommon.constant.OrderConstants;
 import com.zhikaixu.internalcommon.dto.OrderInfo;
@@ -166,15 +167,21 @@ public class OrderInfoService {
         radiusList.add(4000);
         radiusList.add(5000);
 
+        // 搜索结果
         ResponseResult<List<TerminalResponse>> listResponseResult = null;
         for (int i = 0; i < radiusList.size(); i++) {
             Integer radius = radiusList.get(i);
             listResponseResult = serviceMapClient.terminalAroundSearch(center, radius);
 
             log.info("在半径为" + radius + "寻找车辆");
-            // 获得终端
+
+            // 获得终端 [{"tid":"1129053043","carId":1873418460615217160},{"tid":"1132790395","carId":1873418460615217164}]
 
             // 解析终端
+            List<TerminalResponse> data = listResponseResult.getData();
+            for (TerminalResponse terminalResponse : data) {
+                Long carId = terminalResponse.getCarId();
+            }
 
             // 根据解析出来的终端，查询车辆信息
 
@@ -187,7 +194,10 @@ public class OrderInfoService {
         if (data.isEmpty()) {
             log.info("此轮排单没找到车，找了2km, 4km, 5km");
         } else {
-            log.info("此轮排单找到了车");
+            Gson gson = new Gson();
+            String json = gson.toJson(data);
+            log.info("此轮排单找到了车: {}", json);
+
         }
     }
 

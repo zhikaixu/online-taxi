@@ -4,6 +4,7 @@ import com.zhikaixu.internalcommon.constant.DriverCarConstants;
 import com.zhikaixu.internalcommon.dto.DriverUser;
 import com.zhikaixu.internalcommon.dto.ResponseResult;
 import com.zhikaixu.internalcommon.response.DriverUserExistsResponse;
+import com.zhikaixu.internalcommon.response.OrderDriverResponse;
 import com.zhikaixu.servicedriveruser.service.DriverUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
@@ -52,5 +53,15 @@ public class UserController {
 
 
         return ResponseResult.success(response);
+    }
+
+    /**
+     * 根据车辆id查询订单需要的司机信息
+     * @param carId
+     * @return
+     */
+    @GetMapping("/get-available-driver/{carId}")
+    public ResponseResult<OrderDriverResponse> getAvailableDriver(@PathVariable("carId") Long carId) {
+        return driverUserService.getAvailableDriver(carId);
     }
 }
