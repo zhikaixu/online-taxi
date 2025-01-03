@@ -1,5 +1,8 @@
 package com.zhikaixu.servicemap.remote;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.zhikaixu.internalcommon.constant.AmapConfigConstants;
 import com.zhikaixu.internalcommon.dto.ResponseResult;
 import com.zhikaixu.internalcommon.response.TerminalResponse;
@@ -78,26 +81,29 @@ public class TerminalClient {
 
         ResponseEntity<String> stringResponseEntity = restTemplate.postForEntity(url.toString(), null, String.class);
         String body = stringResponseEntity.getBody();
-        JSONObject result = new JSONObject(body);
+//        JSONObject result = new JSONObject(body);
+        Gson gson = new Gson();
+        JsonObject result = gson.fromJson(body, JsonObject.class);
+
         System.out.println("创建终端响应：" + result);
-        JSONObject data = result.getJSONObject("data");
+        JsonObject data = result.getAsJsonObject("data");
         System.out.println("创建终端响应：" + data);
 
         List<TerminalResponse> terminalResponseList = new ArrayList<>();
 
-        JSONArray resultArray = data.getJSONArray("results");
-        for (int i = 0; i < resultArray.length(); i++) {
+        JsonArray resultArray = data.getAsJsonArray("results");
+        for (int i = 0; i < resultArray.size(); i++) {
             TerminalResponse terminalResponse = new TerminalResponse();
 
-            JSONObject jsonObject = resultArray.getJSONObject(i);
+            JsonObject jsonObject = resultArray.get(i).getAsJsonObject();
             // desc是carId
-            String desc = jsonObject.getString("desc");
+            String desc = jsonObject.get("desc").getAsString();
             Long carId = Long.parseLong(desc);
-            String tid = jsonObject.getInt("tid") + "";
+            String tid = String.valueOf(jsonObject.get("tid").getAsInt());
 
-            JSONObject location = jsonObject.getJSONObject("location");
-            long longitude = location.getLong("longitude");
-            long latitude = location.getLong("latitude");
+            JsonObject location = jsonObject.getAsJsonObject("location");
+            String longitude = location.get("longitude").getAsString();
+            String latitude = location.get("latitude").getAsString();
 
             terminalResponse.setTid(tid);
             terminalResponse.setCarId(carId);

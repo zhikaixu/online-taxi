@@ -189,8 +189,8 @@ public class OrderInfoService {
             List<TerminalResponse> data = listResponseResult.getData();
             for (TerminalResponse terminalResponse : data) {
                 Long carId = terminalResponse.getCarId();
-                Long longitude = terminalResponse.getLongitude();
-                Long latitude = terminalResponse.getLatitude();
+                String longitude = terminalResponse.getLongitude();
+                String latitude = terminalResponse.getLatitude();
 
                 // 查询是否有对应的可派单司机
                 ResponseResult<OrderDriverResponse> availableDriver = serviceDriverUserClient.getAvailableDriver(carId);
@@ -217,8 +217,8 @@ public class OrderInfoService {
                     orderInfo.setDriverPhone(driverPhone);
                     orderInfo.setCarId(carId);
                     // 从地图中来
-                    orderInfo.setReceiveOrderCarLongitude(longitude+"");
-                    orderInfo.setReceiveOrderCarLatitude(latitude+"");
+                    orderInfo.setReceiveOrderCarLongitude(longitude);
+                    orderInfo.setReceiveOrderCarLatitude(latitude);
 
                     orderInfo.setReceiveOrderTime(LocalDateTime.now());
 
