@@ -3,7 +3,9 @@ package com.zhikaixu.serviceorder.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.gson.Gson;
 import com.zhikaixu.internalcommon.constant.CommonStatusEnum;
+import com.zhikaixu.internalcommon.constant.DriverCarConstants;
 import com.zhikaixu.internalcommon.constant.OrderConstants;
+import com.zhikaixu.internalcommon.dto.Car;
 import com.zhikaixu.internalcommon.dto.OrderInfo;
 import com.zhikaixu.internalcommon.dto.PriceRule;
 import com.zhikaixu.internalcommon.dto.ResponseResult;
@@ -187,6 +189,8 @@ public class OrderInfoService {
             List<TerminalResponse> data = listResponseResult.getData();
             for (TerminalResponse terminalResponse : data) {
                 Long carId = terminalResponse.getCarId();
+                Long longitude = terminalResponse.getLongitude();
+                Long latitude = terminalResponse.getLatitude();
 
                 // 查询是否有对应的可派单司机
                 ResponseResult<OrderDriverResponse> availableDriver = serviceDriverUserClient.getAvailableDriver(carId);
@@ -197,11 +201,32 @@ public class OrderInfoService {
                     log.info("找到了正在出车的司机，carId: " + carId);
                     OrderDriverResponse orderDriverResponse = availableDriver.getData();
                     Long driverId = orderDriverResponse.getDriverId();
-
+                    String driverPhone = orderDriverResponse.getDriverPhone();
+                    String licenceId = orderDriverResponse.getLicenseId();
+                    String vehicleNo = orderDriverResponse.getVehicleNo();
                     // 判断司机是否有正在进行中的订单
                     if (isDriverOrderGoingon(driverId) > 0) {
                         continue;
                     }
+                    // 订单直接匹配司机
+                    // 查询当前车辆信息
+                    QueryWrapper<Car> carQueryWrapper = new QueryWrapper<>();
+                    carQueryWrapper.eq("id", carId);
+                    // 查询当前司机信息
+                    orderInfo.setDriverId(driverId);
+                    orderInfo.setDriverPhone(driverPhone);
+                    orderInfo.setCarId(carId);
+                    // 从地图中来
+                    orderInfo.setReceiveOrderCarLongitude(longitude+"");
+                    orderInfo.setReceiveOrderCarLatitude(latitude+"");
+
+                    orderInfo.setReceiveOrderTime(LocalDateTime.now());
+
+                    orderInfo.setLicenseId(licenceId);
+                    orderInfo.setVehicleNo(vehicleNo);
+                    orderInfo.setOrderStatus(OrderConstants.DRIVER_RECEIVE_ORDER);
+
+                    orderInfoMapper.updateById(orderInfo);
                     break;
                 }
             }

@@ -9,4 +9,8 @@ public class TerminalResponse {
 
     private Long carId;
 
+    private Long longitude;
+
+    private Long latitude;
+
 }
