@@ -8,6 +8,7 @@ import com.zhikaixu.internalcommon.dto.OrderInfo;
 import com.zhikaixu.internalcommon.dto.PriceRule;
 import com.zhikaixu.internalcommon.dto.ResponseResult;
 import com.zhikaixu.internalcommon.request.OrderRequest;
+import com.zhikaixu.internalcommon.response.OrderDriverResponse;
 import com.zhikaixu.internalcommon.response.TerminalResponse;
 import com.zhikaixu.internalcommon.util.RedisPrefixUtils;
 import com.zhikaixu.serviceorder.mapper.OrderInfoMapper;
@@ -181,6 +182,15 @@ public class OrderInfoService {
             List<TerminalResponse> data = listResponseResult.getData();
             for (TerminalResponse terminalResponse : data) {
                 Long carId = terminalResponse.getCarId();
+
+                // 查询是否有对应的可派单司机
+                ResponseResult<OrderDriverResponse> availableDriver = serviceDriverUserClient.getAvailableDriver(carId);
+                if (availableDriver.getCode() == CommonStatusEnum.AVAILABLE_DRIVER_EMPTY.getCode()) {
+                    log.info("没有车辆Id：" + carId + "对应的司机");
+                    continue;
+                } else {
+                    log.info("找到了正在出车的司机，carId: " + carId);
+                }
             }
 
             // 根据解析出来的终端，查询车辆信息
