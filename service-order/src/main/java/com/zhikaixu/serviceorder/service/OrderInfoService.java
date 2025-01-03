@@ -75,7 +75,7 @@ public class OrderInfoService {
         }
 
         // 判断有正在进行的订单，不允许下单
-        if (isOrderGoingon(orderRequest.getPassengerId()) > 0) {
+        if (isPassengerOrderGoingon(orderRequest.getPassengerId()) > 0) {
             return ResponseResult.fail(CommonStatusEnum.ORDER_GOING_ON.getCode(), CommonStatusEnum.ORDER_GOING_ON.getValue());
         }
         // 创建订单
@@ -97,7 +97,12 @@ public class OrderInfoService {
         return ResponseResult.success("");
     }
 
-    private int isOrderGoingon(Long passengerId) {
+    /**
+     * 判断乘客是否有 正在进行的订单
+     * @param passengerId
+     * @return
+     */
+    private int isPassengerOrderGoingon(Long passengerId) {
         // 判断有正在进行的订单，不允许下单
         QueryWrapper<OrderInfo> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("passenger_id", passengerId);
@@ -190,6 +195,14 @@ public class OrderInfoService {
                     continue;
                 } else {
                     log.info("找到了正在出车的司机，carId: " + carId);
+                    OrderDriverResponse orderDriverResponse = availableDriver.getData();
+                    Long driverId = orderDriverResponse.getDriverId();
+
+                    // 判断司机是否有正在进行中的订单
+                    if (isDriverOrderGoingon(driverId) > 0) {
+                        continue;
+                    }
+                    break;
                 }
             }
 
@@ -209,6 +222,28 @@ public class OrderInfoService {
             log.info("此轮排单找到了车: {}", json);
 
         }
+    }
+
+    /**
+     * 判断司机是否有 正在进行的订单
+     * @param driverId
+     * @return
+     */
+    private int isDriverOrderGoingon(Long driverId) {
+        // 判断有正在进行的订单，不允许下单
+        QueryWrapper<OrderInfo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("driver_id", driverId);
+        queryWrapper.and(wrapper->wrapper
+                .or().eq("order_status", OrderConstants.DRIVER_RECEIVE_ORDER)
+                .or().eq("order_status", OrderConstants.DRIVER_TO_PICK_UP_PASSENGER)
+                .or().eq("order_status", OrderConstants.DRIVER_ARRIVED_DEPARTURE)
+                .or().eq("order_status", OrderConstants.PICK_UP_PASSENGER)
+        );
+
+        Integer validOrderNumber = orderInfoMapper.selectCount(queryWrapper);
+        log.info("司机id: " + driverId + " 正在进行的订单的数量: " + validOrderNumber);
+        return validOrderNumber;
+
     }
 
 }
