@@ -163,7 +163,7 @@ public class OrderInfoService {
      * 实时订单排单逻辑
      * @param orderInfo
      */
-    public void dispatchRealTimeOrder(OrderInfo orderInfo) {
+    public synchronized void dispatchRealTimeOrder(OrderInfo orderInfo) {
 
         // 2km
         String depLatitude = orderInfo.getDepLatitude();
@@ -209,7 +209,7 @@ public class OrderInfoService {
                     // 原来driverId是线程的局部变量，每个线程都有自己的driverId局部变量，因此会出现数据冲突
                     // 现在将driverId变成字符串并加上intern方法，可以让所有线程都去字符串常量池取这个字符串的引用，如果常量池中没有，先创建，再返回引用
 
-                    synchronized ((driverId + "").intern()) {
+//                    synchronized ((driverId + "").intern()) {
                         // 判断司机是否有正在进行中的订单
                         if (isDriverOrderGoingon(driverId) > 0) {
                             continue;
@@ -234,7 +234,7 @@ public class OrderInfoService {
 
                         orderInfoMapper.updateById(orderInfo);
                         break;
-                    }
+//                    }
 
                 }
             }
