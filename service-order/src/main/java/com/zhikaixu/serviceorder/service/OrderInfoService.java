@@ -18,6 +18,8 @@ import com.zhikaixu.serviceorder.remote.ServiceDriverUserClient;
 import com.zhikaixu.serviceorder.remote.ServiceMapClient;
 import com.zhikaixu.serviceorder.remote.ServicePriceClient;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -159,11 +161,14 @@ public class OrderInfoService {
     @Autowired
     private ServiceMapClient serviceMapClient;
 
+    @Autowired
+    private RedissonClient redissonClient;
+
     /**
      * 实时订单排单逻辑
      * @param orderInfo
      */
-    public synchronized void dispatchRealTimeOrder(OrderInfo orderInfo) {
+    public void dispatchRealTimeOrder(OrderInfo orderInfo) {
 
         // 2km
         String depLatitude = orderInfo.getDepLatitude();
@@ -210,30 +215,37 @@ public class OrderInfoService {
                     // 现在将driverId变成字符串并加上intern方法，可以让所有线程都去字符串常量池取这个字符串的引用，如果常量池中没有，先创建，再返回引用
 
 //                    synchronized ((driverId + "").intern()) {
-                        // 判断司机是否有正在进行中的订单
-                        if (isDriverOrderGoingon(driverId) > 0) {
-                            continue;
-                        }
-                        // 订单直接匹配司机
-                        // 查询当前车辆信息
-                        QueryWrapper<Car> carQueryWrapper = new QueryWrapper<>();
-                        carQueryWrapper.eq("id", carId);
-                        // 查询当前司机信息
-                        orderInfo.setDriverId(driverId);
-                        orderInfo.setDriverPhone(driverPhone);
-                        orderInfo.setCarId(carId);
-                        // 从地图中来
-                        orderInfo.setReceiveOrderCarLongitude(longitude);
-                        orderInfo.setReceiveOrderCarLatitude(latitude);
+                    // 判断司机是否有正在进行中的订单
+                    String lockKey = (driverId + "").intern();
+                    RLock lock = redissonClient.getLock(lockKey);
+                    lock.lock();
 
-                        orderInfo.setReceiveOrderTime(LocalDateTime.now());
+                    if (isDriverOrderGoingon(driverId) > 0) {
+                        lock.unlock();
+                        continue;
+                    }
+                    // 订单直接匹配司机
+                    // 查询当前车辆信息
+                    QueryWrapper<Car> carQueryWrapper = new QueryWrapper<>();
+                    carQueryWrapper.eq("id", carId);
+                    // 查询当前司机信息
+                    orderInfo.setDriverId(driverId);
+                    orderInfo.setDriverPhone(driverPhone);
+                    orderInfo.setCarId(carId);
+                    // 从地图中来
+                    orderInfo.setReceiveOrderCarLongitude(longitude);
+                    orderInfo.setReceiveOrderCarLatitude(latitude);
 
-                        orderInfo.setLicenseId(licenceId);
-                        orderInfo.setVehicleNo(vehicleNo);
-                        orderInfo.setOrderStatus(OrderConstants.DRIVER_RECEIVE_ORDER);
+                    orderInfo.setReceiveOrderTime(LocalDateTime.now());
 
-                        orderInfoMapper.updateById(orderInfo);
-                        break;
+                    orderInfo.setLicenseId(licenceId);
+                    orderInfo.setVehicleNo(vehicleNo);
+                    orderInfo.setOrderStatus(OrderConstants.DRIVER_RECEIVE_ORDER);
+
+                    orderInfoMapper.updateById(orderInfo);
+
+                    lock.unlock();
+                    break;
 //                    }
 
                 }
