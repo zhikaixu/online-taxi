@@ -6,6 +6,7 @@ import com.zhikaixu.internalcommon.dto.ResponseResult;
 import com.zhikaixu.internalcommon.request.OrderRequest;
 import com.zhikaixu.serviceorder.service.OrderInfoService;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,6 +42,17 @@ public class OrderInfoController {
         log.info("service-order:" + orderRequest.getAddress());
 
         return orderInfoService.add(orderRequest);
+    }
+
+    /**
+     * 司机去接乘客
+     * @param orderRequest
+     * @return
+     */
+    @PostMapping("/to-pick-up-passenger")
+    public ResponseResult changeStatus(@RequestBody OrderRequest orderRequest) {
+
+        return orderInfoService.toPickUpPassenger(orderRequest);
     }
 
 }
