@@ -2,8 +2,10 @@ package com.zhikaixu.serviceorder.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.zhikaixu.internalcommon.constant.CommonStatusEnum;
 import com.zhikaixu.internalcommon.constant.DriverCarConstants;
+import com.zhikaixu.internalcommon.constant.IdentityConstant;
 import com.zhikaixu.internalcommon.constant.OrderConstants;
 import com.zhikaixu.internalcommon.dto.Car;
 import com.zhikaixu.internalcommon.dto.OrderInfo;
@@ -17,6 +19,7 @@ import com.zhikaixu.serviceorder.mapper.OrderInfoMapper;
 import com.zhikaixu.serviceorder.remote.ServiceDriverUserClient;
 import com.zhikaixu.serviceorder.remote.ServiceMapClient;
 import com.zhikaixu.serviceorder.remote.ServicePriceClient;
+import com.zhikaixu.serviceorder.remote.ServiceSsePushClient;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
@@ -164,6 +167,9 @@ public class OrderInfoService {
     @Autowired
     private RedissonClient redissonClient;
 
+    @Autowired
+    private ServiceSsePushClient serviceSsePushClient;
+
     /**
      * 实时订单排单逻辑
      * @param orderInfo
@@ -244,18 +250,26 @@ public class OrderInfoService {
 
                     orderInfoMapper.updateById(orderInfo);
 
+                    // 通知司机
+                    JsonObject content = new JsonObject();
+                    content.addProperty("passengerId", orderInfo.getPassengerId());
+                    content.addProperty("passengerPhone", orderInfo.getPassengerPhone());
+                    content.addProperty("departure", orderInfo.getDeparture());
+                    content.addProperty("depLongitude", orderInfo.getDepLongitude());
+                    content.addProperty("depLatitude", orderInfo.getDepLatitude());
+                    content.addProperty("destination", orderInfo.getDestination());
+                    content.addProperty("destLongitude", orderInfo.getDestLongitude());
+                    content.addProperty("destLatitude", orderInfo.getDestLatitude());
+
+
+                    serviceSsePushClient.push(driverId, IdentityConstant.DRIVER_IDENTITY, content.toString());
+
                     lock.unlock();
                     break;
 //                    }
 
                 }
             }
-
-            // 根据解析出来的终端，查询车辆信息
-
-            // 找到符合的车辆，进行派单
-
-            // 如果派单成功，则退出循环
         }
 
         List<TerminalResponse> data = listResponseResult.getData();
