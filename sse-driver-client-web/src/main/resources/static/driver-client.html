@@ -17,12 +17,12 @@
         source = new EventSource("http://localhost:9000/connect/" + driverId);
 
         // 监听服务的推送的消息
-        // source.addEventListener("message", function (e) {
-        //     content = e.data;
-        //     console.info("消息内容: " + content);
-        //
-        //     setMessageContent(content);
-        // })
+        source.addEventListener("message", function (e) {
+            content = e.data;
+            console.info("消息内容: " + content);
+
+            setMessageContent(content);
+        })
 
     } else {
         setMessageContent("此浏览器不支持");
