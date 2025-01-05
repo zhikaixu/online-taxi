@@ -417,4 +417,22 @@ public class OrderInfoService {
         orderInfoMapper.updateById(orderInfo);
         return ResponseResult.success("");
     }
+
+    public ResponseResult passengerGetOff(OrderRequest orderRequest) {
+        Long orderId = orderRequest.getOrderId();
+
+        QueryWrapper<OrderInfo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", orderId);
+
+        OrderInfo orderInfo = orderInfoMapper.selectOne(queryWrapper);
+        orderInfo.setOrderStatus(OrderConstants.PASSENGER_GETOFF);
+        orderInfo.setPassengerGetoffLongitude(orderRequest.getPassengerGetoffLongitude());
+        orderInfo.setPassengerGetoffLatitude(orderRequest.getPassengerGetoffLatitude());
+        orderInfo.setPassengerGetoffTime(LocalDateTime.now());
+
+        // TODO: 订单行驶的路程和时间
+
+        orderInfoMapper.updateById(orderInfo);
+        return ResponseResult.success("");
+    }
 }

@@ -93,4 +93,19 @@ public class OrderRequest {
      * 接到乘客，乘客上车纬度
      */
     private String pickUpPassengerLatitude;
+
+    /**
+     * 乘客下车时间
+     */
+    private LocalDateTime passengerGetoffTime;
+
+    /**
+     * 乘客下车经度
+     */
+    private String passengerGetoffLongitude;
+
+    /**
+     * 乘客下车纬度
+     */
+    private String passengerGetoffLatitude;
 }
