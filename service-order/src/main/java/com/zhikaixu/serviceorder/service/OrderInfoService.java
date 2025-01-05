@@ -98,9 +98,20 @@ public class OrderInfoService {
 
         orderInfoMapper.insert(orderInfo);
 
-        // 派单
-        dispatchRealTimeOrder(orderInfo);
-
+        // 定时任务处理
+        for (int i = 0; i < 6; i++) {
+            // 派单
+            int result = dispatchRealTimeOrder(orderInfo);
+            if (result == 1) {
+                break;
+            }
+            // 等待20秒
+            try {
+                Thread.sleep(2);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
         return ResponseResult.success("");
     }
 
@@ -173,8 +184,11 @@ public class OrderInfoService {
     /**
      * 实时订单排单逻辑
      * @param orderInfo
+     * @return 0: 派单失败；1: 派单成功
      */
-    public void dispatchRealTimeOrder(OrderInfo orderInfo) {
+    public int dispatchRealTimeOrder(OrderInfo orderInfo) {
+        log.info("派单循环一次");
+        int result = 0;
 
         // 2km
         String depLatitude = orderInfo.getDepLatitude();
@@ -282,7 +296,7 @@ public class OrderInfoService {
 
                     serviceSsePushClient.push(orderInfo.getPassengerId(), IdentityConstant.PASSENGER_IDENTITY, passengerContent.toString());
 
-
+                    result = 1;
                     lock.unlock();
                     break;
 //                    }
@@ -300,6 +314,8 @@ public class OrderInfoService {
             log.info("此轮排单找到了车: {}", json);
 
         }
+
+        return result;
     }
 
     /**
