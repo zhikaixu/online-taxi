@@ -251,18 +251,37 @@ public class OrderInfoService {
                     orderInfoMapper.updateById(orderInfo);
 
                     // 通知司机
-                    JsonObject content = new JsonObject();
-                    content.addProperty("passengerId", orderInfo.getPassengerId());
-                    content.addProperty("passengerPhone", orderInfo.getPassengerPhone());
-                    content.addProperty("departure", orderInfo.getDeparture());
-                    content.addProperty("depLongitude", orderInfo.getDepLongitude());
-                    content.addProperty("depLatitude", orderInfo.getDepLatitude());
-                    content.addProperty("destination", orderInfo.getDestination());
-                    content.addProperty("destLongitude", orderInfo.getDestLongitude());
-                    content.addProperty("destLatitude", orderInfo.getDestLatitude());
+                    JsonObject driverContent = new JsonObject();
+                    driverContent.addProperty("passengerId", orderInfo.getPassengerId());
+                    driverContent.addProperty("passengerPhone", orderInfo.getPassengerPhone());
+                    driverContent.addProperty("departure", orderInfo.getDeparture());
+                    driverContent.addProperty("depLongitude", orderInfo.getDepLongitude());
+                    driverContent.addProperty("depLatitude", orderInfo.getDepLatitude());
+                    driverContent.addProperty("destination", orderInfo.getDestination());
+                    driverContent.addProperty("destLongitude", orderInfo.getDestLongitude());
+                    driverContent.addProperty("destLatitude", orderInfo.getDestLatitude());
 
 
-                    serviceSsePushClient.push(driverId, IdentityConstant.DRIVER_IDENTITY, content.toString());
+                    serviceSsePushClient.push(driverId, IdentityConstant.DRIVER_IDENTITY, driverContent.toString());
+
+                    // 通知乘客
+                    JsonObject passengerContent = new JsonObject();
+                    passengerContent.addProperty("driverId", orderInfo.getDriverId());
+                    passengerContent.addProperty("driverPhone", orderInfo.getDriverPhone());
+                    passengerContent.addProperty("vehicleNo", orderInfo.getVehicleNo());
+                    // 车辆信息，调用车辆服务查询
+                    ResponseResult<Car> carById = serviceDriverUserClient.getCarById(carId);
+                    Car carRemote = carById.getData();
+                    passengerContent.addProperty("brand", carRemote.getBrand());
+                    passengerContent.addProperty("model", carRemote.getModel());
+                    passengerContent.addProperty("vehicleColor", carRemote.getVehicleColor());
+
+                    passengerContent.addProperty("receiveOrderCarLongitude", orderInfo.getReceiveOrderCarLongitude());
+                    passengerContent.addProperty("receiveOrderCarLatitude", orderInfo.getReceiveOrderCarLatitude());
+
+
+                    serviceSsePushClient.push(orderInfo.getPassengerId(), IdentityConstant.PASSENGER_IDENTITY, passengerContent.toString());
+
 
                     lock.unlock();
                     break;
