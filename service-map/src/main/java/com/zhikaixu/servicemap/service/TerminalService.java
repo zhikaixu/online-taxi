@@ -2,6 +2,7 @@ package com.zhikaixu.servicemap.service;
 
 import com.zhikaixu.internalcommon.dto.ResponseResult;
 import com.zhikaixu.internalcommon.response.TerminalResponse;
+import com.zhikaixu.internalcommon.response.TrsearchResponse;
 import com.zhikaixu.servicemap.remote.TerminalClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.rsocket.context.RSocketPortInfoApplicationContextInitializer;
@@ -24,7 +25,7 @@ public class TerminalService {
         return terminalClient.aroundSearch(center, radius);
     }
 
-    public ResponseResult trsearch(String tid, Long starttime, Long endtime) {
+    public ResponseResult<TrsearchResponse> trsearch(String tid, Long starttime, Long endtime) {
         return terminalClient.trsearch(tid, starttime, endtime);
     }
 }
