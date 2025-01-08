@@ -20,4 +20,8 @@ public class ApiDriverOrderInfoService {
         return serviceOrderClient.arrivedDeparture(orderRequest);
     }
 
+    public ResponseResult pickUpPassenger(OrderRequest orderRequest) {
+        return serviceOrderClient.pickUpPassenger(orderRequest);
+    }
+
 }
