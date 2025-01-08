@@ -248,12 +248,20 @@ public class OrderInfoService {
                     String driverPhone = orderDriverResponse.getDriverPhone();
                     String licenceId = orderDriverResponse.getLicenseId();
                     String vehicleNo = orderDriverResponse.getVehicleNo();
-
+                    String vehicleTypeFromCar = orderDriverResponse.getVehicleType();
                     // 锁司机id的方式要注意
                     // 原来driverId是线程的局部变量，每个线程都有自己的driverId局部变量，因此会出现数据冲突
                     // 现在将driverId变成字符串并加上intern方法，可以让所有线程都去字符串常量池取这个字符串的引用，如果常量池中没有，先创建，再返回引用
 
 //                    synchronized ((driverId + "").intern()) {
+
+                    // 判断车辆的车型是否符合
+                    String vehicleType = orderInfo.getVehicleType();
+                    if (!vehicleType.trim().equals(vehicleTypeFromCar.trim())) {
+                        System.out.println("车型不符合");
+                        continue;
+                    }
+
                     // 判断司机是否有正在进行中的订单
                     String lockKey = (driverId + "").intern();
                     RLock lock = redissonClient.getLock(lockKey);
@@ -265,8 +273,8 @@ public class OrderInfoService {
                     }
                     // 订单直接匹配司机
                     // 查询当前车辆信息
-                    QueryWrapper<Car> carQueryWrapper = new QueryWrapper<>();
-                    carQueryWrapper.eq("id", carId);
+//                    QueryWrapper<Car> carQueryWrapper = new QueryWrapper<>();
+//                    carQueryWrapper.eq("id", carId);
                     // 查询当前司机信息
                     orderInfo.setDriverId(driverId);
                     orderInfo.setDriverPhone(driverPhone);
