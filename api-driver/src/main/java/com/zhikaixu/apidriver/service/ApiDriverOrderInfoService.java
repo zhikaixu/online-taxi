@@ -4,6 +4,7 @@ import com.zhikaixu.apidriver.remote.ServiceOrderClient;
 import com.zhikaixu.internalcommon.dto.ResponseResult;
 import com.zhikaixu.internalcommon.request.OrderRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,6 +23,10 @@ public class ApiDriverOrderInfoService {
 
     public ResponseResult pickUpPassenger(OrderRequest orderRequest) {
         return serviceOrderClient.pickUpPassenger(orderRequest);
+    }
+
+    public ResponseResult passengerGetOff(OrderRequest orderRequest) {
+        return serviceOrderClient.passengerGetOff(orderRequest);
     }
 
 }

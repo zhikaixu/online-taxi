@@ -38,4 +38,11 @@ public class OrderController {
 
         return apiDriverOrderInfoService.pickUpPassenger(orderRequest);
     }
+
+    @PostMapping("/passenger-get-off")
+    public ResponseResult passengerGetOff(@RequestBody OrderRequest orderRequest) {
+
+        return apiDriverOrderInfoService.passengerGetOff(orderRequest);
+    }
+
 }
