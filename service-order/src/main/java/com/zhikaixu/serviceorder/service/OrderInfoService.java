@@ -440,7 +440,7 @@ public class OrderInfoService {
         orderInfo.setPassengerGetoffLatitude(orderRequest.getPassengerGetoffLatitude());
         orderInfo.setPassengerGetoffTime(LocalDateTime.now());
 
-        // TODO: 订单行驶的路程和时间,调用service-map
+        // 订单行驶的路程和时间,调用service-map
         ResponseResult<Car> carById = serviceDriverUserClient.getCarById(orderInfo.getCarId());
         Long starttime = orderInfo.getPickUpPassengerTime().toInstant(ZoneOffset.of("+8")).toEpochMilli();
         System.out.println("开始时间: " + starttime + " unix: " + orderInfo.getPickUpPassengerTime());
@@ -449,8 +449,17 @@ public class OrderInfoService {
         System.out.println("结束时间：" + endtime);
         ResponseResult<TrsearchResponse> trsearch = serviceMapClient.trsearch(carById.getData().getTid(), starttime, endtime);
         TrsearchResponse data = trsearch.getData();
-        orderInfo.setDriveMile(data.getDriveMile());
-        orderInfo.setDriveTime(data.getDriveTime());
+        Long driveMile = data.getDriveMile();
+        Long driveTime = data.getDriveTime();
+        orderInfo.setDriveMile(driveMile);
+        orderInfo.setDriveTime(driveTime);
+
+        // 获取价格
+        String address = orderInfo.getAddress();
+        String vehicleType = orderInfo.getVehicleType();
+        ResponseResult<Double> doubleResponseResult = servicePriceClient.calculatePrice(driveMile.intValue(), driveTime.intValue(), address, vehicleType);
+        Double price = doubleResponseResult.getData();
+        orderInfo.setPrice(price);
 
         orderInfoMapper.updateById(orderInfo);
         return ResponseResult.success("");
