@@ -26,4 +26,10 @@ public class OrderController {
 
         return apiDriverOrderInfoService.toPickUpPassenger(orderRequest);
     }
+
+    @PostMapping("/arrived-departure")
+    public ResponseResult arrivedDeparture(@RequestBody OrderRequest orderRequest) {
+
+        return apiDriverOrderInfoService.arrivedDeparture(orderRequest);
+    }
 }
