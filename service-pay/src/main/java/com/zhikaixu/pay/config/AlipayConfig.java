@@ -1,4 +1,4 @@
-package com.zhikaixu.pay;
+package com.zhikaixu.pay.config;
 
 import com.alipay.easysdk.factory.Factory;
 import com.alipay.easysdk.kernel.Config;
