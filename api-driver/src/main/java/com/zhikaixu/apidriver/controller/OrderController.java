@@ -4,10 +4,7 @@ import com.zhikaixu.apidriver.service.ApiDriverOrderInfoService;
 import com.zhikaixu.internalcommon.dto.ResponseResult;
 import com.zhikaixu.internalcommon.request.OrderRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/order")
@@ -43,6 +40,12 @@ public class OrderController {
     public ResponseResult passengerGetOff(@RequestBody OrderRequest orderRequest) {
 
         return apiDriverOrderInfoService.passengerGetOff(orderRequest);
+    }
+
+    @PostMapping("/cancel")
+    public ResponseResult cancel(@RequestParam Long orderId) {
+
+        return apiDriverOrderInfoService.cancel(orderId);
     }
 
 }
