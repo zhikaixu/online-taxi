@@ -115,12 +115,19 @@ public class OrderInfoService {
             if (result == 1) {
                 break;
             }
-            // 等待20秒
-            try {
-                Thread.sleep(2);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+            if (i == 5) {
+                // 订单无效
+                orderInfo.setOrderStatus(OrderConstants.ORDER_INVALID);
+                orderInfoMapper.updateById(orderInfo);
+            } else {
+                // 等待20秒
+                try {
+                    Thread.sleep(2);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
+
         }
         return ResponseResult.success("");
     }
