@@ -4,7 +4,7 @@
 
 # redis
 redis-cli shutdown
-redis-server
+redis-server &
 
 # ngrok
 ngrok http http://localhost:9001
