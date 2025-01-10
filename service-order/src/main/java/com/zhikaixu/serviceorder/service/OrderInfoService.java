@@ -301,6 +301,7 @@ public class OrderInfoService {
 
                     // 通知司机
                     JsonObject driverContent = new JsonObject();
+                    driverContent.addProperty("orderId", orderInfo.getId());
                     driverContent.addProperty("passengerId", orderInfo.getPassengerId());
                     driverContent.addProperty("passengerPhone", orderInfo.getPassengerPhone());
                     driverContent.addProperty("departure", orderInfo.getDeparture());
@@ -310,11 +311,11 @@ public class OrderInfoService {
                     driverContent.addProperty("destLongitude", orderInfo.getDestLongitude());
                     driverContent.addProperty("destLatitude", orderInfo.getDestLatitude());
 
-
                     serviceSsePushClient.push(driverId, IdentityConstant.DRIVER_IDENTITY, driverContent.toString());
 
                     // 通知乘客
                     JsonObject passengerContent = new JsonObject();
+                    passengerContent.addProperty("orderId", orderInfo.getId());
                     passengerContent.addProperty("driverId", orderInfo.getDriverId());
                     passengerContent.addProperty("driverPhone", orderInfo.getDriverPhone());
                     passengerContent.addProperty("vehicleNo", orderInfo.getVehicleNo());
