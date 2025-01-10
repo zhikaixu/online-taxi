@@ -1,8 +1,6 @@
 package com.zhikaixu.apidriver.remote;
 
-import com.zhikaixu.internalcommon.dto.Car;
-import com.zhikaixu.internalcommon.dto.DriverUser;
-import com.zhikaixu.internalcommon.dto.ResponseResult;
+import com.zhikaixu.internalcommon.dto.*;
 import com.zhikaixu.internalcommon.response.DriverUserExistsResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
@@ -18,4 +16,10 @@ public interface ServiceDriverUserClient {
 
     @RequestMapping(method = RequestMethod.GET, value = "/car/{carId}")
     public ResponseResult<Car> getCarById(@PathVariable("carId") Long carId);
+
+    @RequestMapping(method = RequestMethod.POST, value = "/driver-user-work-status")
+    public ResponseResult changeWorkStatus(@RequestBody DriverUserWorkStatus driverUserWorkStatus);
+
+    @GetMapping("/driver-car-binding-relationship")
+    public ResponseResult<DriverCarBindingRelationship> getDriverCarRelationship(@RequestParam String driverPhone);
 }

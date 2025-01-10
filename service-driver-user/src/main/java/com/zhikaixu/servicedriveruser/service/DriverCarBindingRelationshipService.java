@@ -5,11 +5,15 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.zhikaixu.internalcommon.constant.CommonStatusEnum;
 import com.zhikaixu.internalcommon.constant.DriverCarConstants;
 import com.zhikaixu.internalcommon.dto.DriverCarBindingRelationship;
+import com.zhikaixu.internalcommon.dto.DriverUser;
 import com.zhikaixu.internalcommon.dto.ResponseResult;
+import com.zhikaixu.servicedriveruser.controller.DriverCarBindingRelationshipController;
 import com.zhikaixu.servicedriveruser.mapper.DriverCarBindingRelationshipMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zhikaixu.servicedriveruser.mapper.DriverUserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -29,6 +33,9 @@ public class DriverCarBindingRelationshipService {
 
     @Autowired
     private DriverCarBindingRelationshipMapper driverCarBindingRelationshipMapper;
+
+    @Autowired
+    private DriverUserMapper driverUserMapper;
 
     public ResponseResult bind(DriverCarBindingRelationship driverCarBindingRelationship) {
         // 判断：如果参数重的车辆和司机，已经做过绑定，则不允许再次绑定
@@ -83,4 +90,19 @@ public class DriverCarBindingRelationshipService {
         driverCarBindingRelationshipMapper.updateById(relationship);
         return ResponseResult.success("");
     }
+
+    public ResponseResult<DriverCarBindingRelationship> getDriverCarRelationship(String driverPhone) {
+        QueryWrapper<DriverUser> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("driver_phone", driverPhone);
+
+        DriverUser driverUser = driverUserMapper.selectOne(queryWrapper);
+        Long driverId = driverUser.getId();
+        QueryWrapper<DriverCarBindingRelationship> driverCarBindingRelationshipQueryWrapper = new QueryWrapper<>();
+        driverCarBindingRelationshipQueryWrapper.eq("driver_id", driverId);
+        driverCarBindingRelationshipQueryWrapper.eq("bind_state", DriverCarConstants.DRIVER_CAR_BIND);
+
+        DriverCarBindingRelationship driverCarBindingRelationship = driverCarBindingRelationshipMapper.selectOne(driverCarBindingRelationshipQueryWrapper);
+        return ResponseResult.success(driverCarBindingRelationship);
+    }
+
 }
