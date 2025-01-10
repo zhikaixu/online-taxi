@@ -3,10 +3,7 @@ package com.zhikaixu.apidriver.remote;
 import com.zhikaixu.internalcommon.dto.ResponseResult;
 import com.zhikaixu.internalcommon.request.OrderRequest;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @FeignClient("service-order")
 public interface ServiceOrderClient {
@@ -19,6 +16,9 @@ public interface ServiceOrderClient {
 
     @RequestMapping(method = RequestMethod.POST, value = "/order/pick-up-passenger")
     public ResponseResult pickUpPassenger(@RequestBody OrderRequest orderRequest);
+
+    @RequestMapping(method = RequestMethod.POST, value = "/order/push-pay-info")
+    public ResponseResult pushPayInfo(@RequestBody OrderRequest orderRequest);
 
     @RequestMapping(method = RequestMethod.POST, value = "/order/passenger-get-off")
     public ResponseResult passengerGetOff(@RequestBody OrderRequest orderRequest);

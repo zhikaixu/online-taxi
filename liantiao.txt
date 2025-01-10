@@ -18,3 +18,53 @@ accessToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwaG9uZSI6IjE4MTc4MTAwMDAxIi
 手机号：13900000001
 验证码: 732620
 accessToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwaG9uZSI6IjEzOTAwMDAwMDAxIiwiaWRlbnRpdHkiOiIyIiwidG9rZW5UaW1lIjoiVGh1IEphbiAwOSAyMDoyNjozNSBFU1QgMjAyNSIsInRva2VuVHlwZSI6ImFjY2Vzc1Rva2VuIn0.CCzy5ae4iLv8unzssYlngYXGzqQGg2QjxTwvh16yh3Y
+
+订单号：
+1589441348365479992
+
+116.317741,39.897348
+116.315338,39.897085
+116.31036,39.899719
+116.31036,39.902748
+116.310532,39.907357
+116.310188,39.91473
+116.310188,39.91947
+116.310703,39.923683
+
+{
+    "carId": "1873418460615217168",
+    "points": [
+        {
+            "location": "116.317741,39.897348",
+            "locatetime": "1736539062219"
+        },
+        {
+            "location": "116.315338,39.897085",
+            "locatetime": "1736539090220"
+        },
+        {
+            "location": "116.31036,39.899719",
+            "locatetime": "1736539116219"
+        },
+        {
+            "location": "116.31036,39.902748",
+            "locatetime": "1736539143219"
+        },
+        {
+            "location": "116.310532,39.907357",
+            "locatetime": "1736539167220"
+        },
+        {
+            "location": "116.310188,39.91473",
+            "locatetime": "1736539190222"
+        },
+        {
+            "location": "116.310188,39.91947",
+            "locatetime": "1736539213221"
+        },
+        {
+            "location": "116.310703,39.923683",
+            "locatetime": "1736539232221"
+        }
+    ]
+}
