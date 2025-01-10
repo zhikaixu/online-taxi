@@ -23,7 +23,7 @@ public class SseController {
      */
     @GetMapping("/connect")
     public SseEmitter connect(@RequestParam Long userId, @RequestParam String identity) {
-        log.info("用户ID: " + userId + " ,身份类型：" + identity);
+        log.info("connect: 用户ID: " + userId + " ,身份类型：" + identity);
         SseEmitter sseEmitter = new SseEmitter(0l);
 
         String sseMapKey = SsePrefixUtils.generatorSseKey(userId, identity);
@@ -41,16 +41,17 @@ public class SseController {
      */
     @GetMapping("/push")
     public String push(@RequestParam Long userId, @RequestParam String identity, @RequestParam String content) {
-        log.info("用户ID：" + userId + " ,身份：" + identity);
+        log.info("push: 用户ID：" + userId + " ,身份：" + identity);
         String sseMapKey = SsePrefixUtils.generatorSseKey(userId, identity);
         try {
             if (sseEmitterMap.containsKey(sseMapKey)) {
                 sseEmitterMap.get(sseMapKey).send(content);
             } else {
+                log.info("push: 用户ID：" + userId + " ,身份：" + identity + " 推送失败");
                 return "推送失败";
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
 
         return "给用户: " + sseMapKey + " ,发送了消息: " + content;

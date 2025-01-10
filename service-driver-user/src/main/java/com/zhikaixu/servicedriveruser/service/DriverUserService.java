@@ -100,6 +100,7 @@ public class DriverUserService {
             DriverUser driverUser = driverUserMapper.selectOne(driverUserQueryWrapper);
             // 查询车辆信息
             QueryWrapper<Car> carQueryWrapper = new QueryWrapper<>();
+            carQueryWrapper.eq("id",carId);
             Car car = carMapper.selectOne(carQueryWrapper);
 
 

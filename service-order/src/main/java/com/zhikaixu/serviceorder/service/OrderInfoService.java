@@ -124,7 +124,7 @@ public class OrderInfoService {
                 try {
                     Thread.sleep(2);
                 } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
                 }
             }
 
