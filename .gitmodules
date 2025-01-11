@@ -1,0 +1,3 @@
+[submodule "internal-common"]
+	path = internal-common
+	url = ../internal-common
