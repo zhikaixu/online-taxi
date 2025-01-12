@@ -1,7 +1,10 @@
 package com.zhikaixu.apipassenger.controller;
 
+import com.zhikaixu.apipassenger.constraints.CheckVerificationCodeGroup;
+import com.zhikaixu.apipassenger.constraints.SendVerificationCodeGroup;
 import com.zhikaixu.apipassenger.request.SendVerificationCodeDTO;
 import com.zhikaixu.apipassenger.request.CheckVerificationCodeDTO;
+import com.zhikaixu.apipassenger.request.TestGroupCheckVerificationCodeDTO;
 import com.zhikaixu.apipassenger.service.VerificationCodeService;
 import com.zhikaixu.internalcommon.dto.ResponseResult;
 
@@ -19,14 +22,14 @@ public class VerificationCodeController {
     private VerificationCodeService verificationCodeService;
 
     @GetMapping("/verification-code")
-    public ResponseResult verificationCode(@Validated @RequestBody SendVerificationCodeDTO verificationCodeDTO) {
+    public ResponseResult verificationCode(@Validated(SendVerificationCodeGroup.class) @RequestBody TestGroupCheckVerificationCodeDTO verificationCodeDTO) {
         String passengerPhone = verificationCodeDTO.getPassengerPhone();
         System.out.println("接受到的手机号参数:" + passengerPhone);
         return verificationCodeService.generateCode(passengerPhone);
     }
 
     @PostMapping("/verification-code-check")
-    public ResponseResult checkVerificationCode(@Validated @RequestBody CheckVerificationCodeDTO verificationCodeDTO) {
+    public ResponseResult checkVerificationCode(@Validated(CheckVerificationCodeGroup.class) @RequestBody TestGroupCheckVerificationCodeDTO verificationCodeDTO) {
         String passengerPhone = verificationCodeDTO.getPassengerPhone();
         String verificationCode = verificationCodeDTO.getVerificationCode();
 

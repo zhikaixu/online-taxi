@@ -15,6 +15,4 @@ public class CheckVerificationCodeDTO {
     @NotBlank(message = "验证码不能为空")
     @Pattern(regexp = "^\\d{6}$", message = "请填写6位数字的验证码")
     private String verificationCode;
-
-    private String driverPhone;
 }
