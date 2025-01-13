@@ -4,7 +4,7 @@ import com.zhikaixu.apipassenger.remote.ServiceOrderClient;
 import com.zhikaixu.internalcommon.constant.IdentityConstant;
 import com.zhikaixu.internalcommon.constant.OrderConstants;
 import com.zhikaixu.internalcommon.dto.ResponseResult;
-import com.zhikaixu.internalcommon.request.OrderRequest;
+import com.zhikaixu.apipassenger.request.OrderRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

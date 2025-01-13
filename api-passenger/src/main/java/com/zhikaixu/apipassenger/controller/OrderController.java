@@ -2,7 +2,7 @@ package com.zhikaixu.apipassenger.controller;
 
 import com.zhikaixu.apipassenger.service.OrderService;
 import com.zhikaixu.internalcommon.dto.ResponseResult;
-import com.zhikaixu.internalcommon.request.OrderRequest;
+import com.zhikaixu.apipassenger.request.OrderRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
