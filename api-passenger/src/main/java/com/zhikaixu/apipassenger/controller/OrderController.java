@@ -7,8 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+
 @RestController
 @RequestMapping("/order")
+@Validated
 public class OrderController {
 
     @Autowired
@@ -25,7 +29,7 @@ public class OrderController {
     }
 
     @PostMapping("/cancel")
-    public ResponseResult cancel(@RequestParam Long orderId) {
+    public ResponseResult cancel(@NotNull(message = "订单id不能为空") @Positive(message = "订单id要为正数") @RequestParam Long orderId) {
 
         return orderService.cancel(orderId);
     }
