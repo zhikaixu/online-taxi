@@ -11,9 +11,11 @@ public class DateTimeRangeValidator implements ConstraintValidator<DateTimeRange
 
     private DateTimeRange dateTimeRange;
 
+    private String judge;
+
     @Override
     public void initialize(DateTimeRange constraintAnnotation) {
-
+        this.judge = constraintAnnotation.judge();
         ConstraintValidator.super.initialize(constraintAnnotation);
     }
 
@@ -37,7 +39,11 @@ public class DateTimeRangeValidator implements ConstraintValidator<DateTimeRange
 
         LocalDateTime now = LocalDateTime.now();
 
-        if (dataValue.isAfter(now)) {
+        if (judge.equals(DateTimeRange.IS_AFTER) && dataValue.isAfter(now)) {
+            return true;
+        }
+
+        if (judge.equals(DateTimeRange.IS_BEFORE) && dataValue.isBefore(now)) {
             return true;
         }
 

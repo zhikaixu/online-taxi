@@ -31,5 +31,13 @@ public @interface DateTimeRange {
 
     Class<? extends Payload>[] payload() default {};
 
+    /**
+     * 判断用户输入的参数在当前时间之前
+     */
+    public final static String IS_AFTER = "isAfter";
 
+    /**
+     * 判断用户输入的参数在当前时间之后
+     */
+    public final static String IS_BEFORE = "isBefore";
 }

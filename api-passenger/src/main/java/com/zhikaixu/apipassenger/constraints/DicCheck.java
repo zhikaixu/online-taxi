@@ -9,19 +9,19 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = VehicleTypeCheckValidator.class)
-public @interface VehicleTypeCheck {
+@Constraint(validatedBy = DicCheckValidator.class)
+public @interface DicCheck {
     /**
      * 车辆类型的选项
      * @return
      */
-    String[] vehicleTypeValue() default {};
+    String[] dicValue() default {};
 
     /**
      * 提示信息
      * @return
      */
-    String message() default "车辆类型不正确";
+    String message() default "";
 
     Class<?>[] groups() default {};
 
