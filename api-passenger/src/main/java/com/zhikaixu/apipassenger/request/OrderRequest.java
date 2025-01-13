@@ -1,9 +1,11 @@
 package com.zhikaixu.apipassenger.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.zhikaixu.apipassenger.constraints.DateTimeRange;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Positive;
 import java.time.LocalDateTime;
@@ -12,17 +14,16 @@ import java.time.LocalDateTime;
 public class OrderRequest {
 
     // 订单Id
-    @NotBlank
     @Positive
     private Long orderId;
 
     // 乘客ID
-    @NotBlank
+    @NotNull
     @Positive
     private Long passengerId;
 
     // 乘客手机号
-    @NotBlank(message = "手机号不能为空")
+    @NotNull(message = "手机号不能为空")
     @Pattern(regexp = "^1[3456789]\\d{9}$", message = "请填写正确手机号")
     private String passengerPhone;
 
@@ -32,6 +33,8 @@ public class OrderRequest {
 
     // 出发时间
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @NotNull
+    @DateTimeRange(message = "出发时间不正确")
     private LocalDateTime departTime;
 
     // 下单时间

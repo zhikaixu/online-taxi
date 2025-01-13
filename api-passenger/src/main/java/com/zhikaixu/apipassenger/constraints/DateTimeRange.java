@@ -21,6 +21,12 @@ public @interface DateTimeRange {
      */
     String judge() default "isAfter";
 
+    /**
+     * 提示信息
+     * @return
+     */
+    String message() default "日期不正确";
+
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};

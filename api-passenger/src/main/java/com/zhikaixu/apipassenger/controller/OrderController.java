@@ -4,6 +4,7 @@ import com.zhikaixu.apipassenger.service.OrderService;
 import com.zhikaixu.internalcommon.dto.ResponseResult;
 import com.zhikaixu.apipassenger.request.OrderRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,7 +19,7 @@ public class OrderController {
      * @return
      */
     @PostMapping("/add")
-    public ResponseResult add(@RequestBody OrderRequest orderRequest) {
+    public ResponseResult add(@Validated @RequestBody OrderRequest orderRequest) {
         System.out.println(orderRequest);
         return orderService.add(orderRequest);
     }
