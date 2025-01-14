@@ -440,7 +440,7 @@ public class OrderInfoService {
 
         // 搜索结果
         ResponseResult<List<TerminalResponse>> listResponseResult = null;
-//        radius:
+        radius:
         for (int i = 0; i < radiusList.size(); i++) {
             Integer radius = radiusList.get(i);
             listResponseResult = serviceMapClient.terminalAroundSearch(center, radius);
@@ -502,8 +502,8 @@ public class OrderInfoService {
                     driverContent.addProperty("destLatitude", orderInfo.getDestLatitude());
 
                     serviceSsePushClient.push(driverId, IdentityConstant.DRIVER_IDENTITY, driverContent.toString());
-
-                    break;
+                    result = 1;
+                    break radius;
 //                    }
 
                 }
