@@ -28,6 +28,15 @@ public class OrderController {
         return orderService.add(orderRequest);
     }
 
+    /**
+     * 创建预约单
+     * @return
+     */
+    @PostMapping("/book")
+    public ResponseResult book(@Validated @RequestBody OrderRequest orderRequest) {
+        return orderService.book(orderRequest);
+    }
+
     @PostMapping("/cancel")
     public ResponseResult cancel(@NotNull(message = "订单id不能为空") @Positive(message = "订单id要为正数") @RequestParam Long orderId) {
 

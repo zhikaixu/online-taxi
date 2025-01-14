@@ -133,6 +133,71 @@ public class OrderInfoService {
     }
 
     /**
+     * 新建订单
+     * @param orderRequest
+     * @return
+     */
+    public ResponseResult book(OrderRequest orderRequest) {
+//        // 判断城市是否有司机
+//        ResponseResult<Boolean> driverAvailable = serviceDriverUserClient.isDriverAvailable(orderRequest.getAddress());
+//        log.info("判断城市是否有司机结果: " + driverAvailable.getData());
+//        if (!driverAvailable.getData()) {
+//            return ResponseResult.fail(CommonStatusEnum.CITY_DRIVER_EMPTY.getCode(), CommonStatusEnum.CITY_DRIVER_EMPTY.getValue());
+//        }
+
+//        // 需要判断计价规则的版本是否为最新
+//        ResponseResult<Boolean> isNew = servicePriceClient.isNew(orderRequest.getFareType(), orderRequest.getFareVersion());
+//        if (!(isNew.getData())) {
+//            return ResponseResult.fail(CommonStatusEnum.PRICE_RULE_CHANGED.getCode(), CommonStatusEnum.PRICE_RULE_CHANGED.getValue());
+//        }
+
+//        // 设置key，校验原来有没有key
+//        if (isBlackDevice(orderRequest)) {
+//            return ResponseResult.fail(CommonStatusEnum.DEVICE_IS_BLACK.getCode(), CommonStatusEnum.DEVICE_IS_BLACK.getValue());
+//        }
+//
+//        // 判断下单的城市和计价规则是否正常
+//        if (!isPriceRuleExists(orderRequest)) {
+//            return ResponseResult.fail(CommonStatusEnum.CITY_SERVICE_NOT_SERVE.getCode(), CommonStatusEnum.CITY_SERVICE_NOT_SERVE.getValue());
+//        }
+
+//        // 判断有正在进行的订单，不允许下单
+//        if (isPassengerOrderGoingon(orderRequest.getPassengerId()) > 0) {
+//            return ResponseResult.fail(CommonStatusEnum.ORDER_GOING_ON.getCode(), CommonStatusEnum.ORDER_GOING_ON.getValue());
+//        }
+        // 创建订单
+        OrderInfo orderInfo = new OrderInfo();
+
+        BeanUtils.copyProperties(orderRequest, orderInfo);
+
+        orderInfo.setOrderStatus(OrderConstants.ORDER_START);
+
+        LocalDateTime now = LocalDateTime.now();
+        orderInfo.setGmtCreate(now);
+        orderInfo.setGmtModified(now);
+
+        orderInfoMapper.insert(orderInfo);
+
+        // 定时任务处理
+        for (int i = 0; i < 6; i++) {
+            // 派单
+            int result = dispatchBookOrder(orderInfo);
+            if (result == 1) {
+                break;
+            }
+
+            // 等待20秒
+            try {
+                Thread.sleep(2);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            
+        }
+        return ResponseResult.success("");
+    }
+
+    /**
      * 判断乘客是否有 正在进行的订单
      * @param passengerId
      * @return
@@ -334,6 +399,102 @@ public class OrderInfoService {
 
                     result = 1;
                     lock.unlock();
+                    break;
+//                    }
+
+                }
+            }
+        }
+
+        List<TerminalResponse> data = listResponseResult.getData();
+        if (data.isEmpty()) {
+            log.info("此轮排单没找到车，找了2km, 4km, 5km");
+        } else {
+            Gson gson = new Gson();
+            String json = gson.toJson(data);
+            log.info("此轮排单找到了车: {}", json);
+
+        }
+
+        return result;
+    }
+
+    /**
+     * 预约订单-分发订单
+     * @param orderInfo
+     * @return 0: 派单失败；1: 派单成功
+     */
+    public int dispatchBookOrder(OrderInfo orderInfo) {
+        log.info("派单循环一次");
+        int result = 0;
+
+        // 2km
+        String depLatitude = orderInfo.getDepLatitude();
+        String depLongitude = orderInfo.getDepLongitude();
+        String center = depLatitude + "," + depLongitude;
+
+        List<Integer> radiusList = new ArrayList<>();
+        radiusList.add(2000);
+        radiusList.add(4000);
+        radiusList.add(5000);
+
+        // 搜索结果
+        ResponseResult<List<TerminalResponse>> listResponseResult = null;
+        for (int i = 0; i < radiusList.size(); i++) {
+            Integer radius = radiusList.get(i);
+            listResponseResult = serviceMapClient.terminalAroundSearch(center, radius);
+
+            log.info("在半径为" + radius + "寻找车辆");
+
+            // 获得终端 [{"tid":"1129053043","carId":1873418460615217160},{"tid":"1132790395","carId":1873418460615217164}]
+
+            // 解析终端
+            List<TerminalResponse> data = listResponseResult.getData();
+            for (TerminalResponse terminalResponse : data) {
+                Long carId = terminalResponse.getCarId();
+                String longitude = terminalResponse.getLongitude();
+                String latitude = terminalResponse.getLatitude();
+
+                // 查询是否有对应的可派单司机
+                ResponseResult<OrderDriverResponse> availableDriver = serviceDriverUserClient.getAvailableDriver(carId);
+                if (availableDriver.getCode() == CommonStatusEnum.AVAILABLE_DRIVER_EMPTY.getCode()) {
+                    log.info("没有车辆Id：" + carId + "对应的司机");
+                    continue;
+                } else {
+                    log.info("找到了正在出车的司机，carId: " + carId);
+                    OrderDriverResponse orderDriverResponse = availableDriver.getData();
+                    Long driverId = orderDriverResponse.getDriverId();
+                    String driverPhone = orderDriverResponse.getDriverPhone();
+                    String licenceId = orderDriverResponse.getLicenseId();
+                    String vehicleNo = orderDriverResponse.getVehicleNo();
+                    String vehicleTypeFromCar = orderDriverResponse.getVehicleType();
+                    // 锁司机id的方式要注意
+                    // 原来driverId是线程的局部变量，每个线程都有自己的driverId局部变量，因此会出现数据冲突
+                    // 现在将driverId变成字符串并加上intern方法，可以让所有线程都去字符串常量池取这个字符串的引用，如果常量池中没有，先创建，再返回引用
+
+//                    synchronized ((driverId + "").intern()) {
+
+                    // 判断车辆的车型是否符合
+                    String vehicleType = orderInfo.getVehicleType();
+                    if (!vehicleType.trim().equals(vehicleTypeFromCar.trim())) {
+                        System.out.println("车型不符合");
+                        continue;
+                    }
+
+                    // 通知司机
+                    JsonObject driverContent = new JsonObject();
+                    driverContent.addProperty("orderId", orderInfo.getId());
+                    driverContent.addProperty("passengerId", orderInfo.getPassengerId());
+                    driverContent.addProperty("passengerPhone", orderInfo.getPassengerPhone());
+                    driverContent.addProperty("departure", orderInfo.getDeparture());
+                    driverContent.addProperty("depLongitude", orderInfo.getDepLongitude());
+                    driverContent.addProperty("depLatitude", orderInfo.getDepLatitude());
+                    driverContent.addProperty("destination", orderInfo.getDestination());
+                    driverContent.addProperty("destLongitude", orderInfo.getDestLongitude());
+                    driverContent.addProperty("destLatitude", orderInfo.getDestLatitude());
+
+                    serviceSsePushClient.push(driverId, IdentityConstant.DRIVER_IDENTITY, driverContent.toString());
+
                     break;
 //                    }
 

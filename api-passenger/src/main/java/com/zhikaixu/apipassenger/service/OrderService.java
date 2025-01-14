@@ -18,6 +18,10 @@ public class OrderService {
         return serviceOrderClient.add(orderRequest);
     }
 
+    public ResponseResult book(OrderRequest orderRequest) {
+        return serviceOrderClient.add(orderRequest);
+    }
+
     public ResponseResult cancel(Long orderId) {
         return serviceOrderClient.cancel(orderId, IdentityConstant.PASSENGER_IDENTITY);
     }
