@@ -440,16 +440,24 @@ public class OrderInfoService {
 
         // 搜索结果
         ResponseResult<List<TerminalResponse>> listResponseResult = null;
+//        radius:
         for (int i = 0; i < radiusList.size(); i++) {
             Integer radius = radiusList.get(i);
             listResponseResult = serviceMapClient.terminalAroundSearch(center, radius);
 
             log.info("在半径为" + radius + "寻找车辆");
 
-            // 获得终端 [{"tid":"1129053043","carId":1873418460615217160},{"tid":"1132790395","carId":1873418460615217164}]
+            // 测试：为了测试是否从地图上获取到司机
+            TerminalResponse testTerminal = new TerminalResponse();
+            testTerminal.setCarId(1873418460615217170L);
+            testTerminal.setTid("1149084048");
+            testTerminal.setLatitude("39.908145");
+            testTerminal.setLongitude("116.411546");
 
             // 解析终端
             List<TerminalResponse> data = listResponseResult.getData();
+            data.add(testTerminal);
+
             for (TerminalResponse terminalResponse : data) {
                 Long carId = terminalResponse.getCarId();
                 String longitude = terminalResponse.getLongitude();
