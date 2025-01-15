@@ -752,6 +752,15 @@ public class OrderInfoService {
         Long orderId = driverGrabRequest.getOrderId();
         OrderInfo orderInfo = orderInfoMapper.selectById(orderId);
 
+        if (orderInfo == null) {
+            return ResponseResult.fail(CommonStatusEnum.ORDER_NOT_EXISTS.getCode(), CommonStatusEnum.ORDER_NOT_EXISTS.getValue());
+        }
+
+        int orderStatus = orderInfo.getOrderStatus();
+        if (orderStatus != OrderConstants.ORDER_START) {
+            return ResponseResult.fail(CommonStatusEnum.ORDER_CANNOT_GRAB.getCode(), CommonStatusEnum.ORDER_CANNOT_GRAB.getValue());
+        }
+
         Long driverId = driverGrabRequest.getDriverId();
         String driverPhone = driverGrabRequest.getDriverPhone();
         Long carId = driverGrabRequest.getCarId();

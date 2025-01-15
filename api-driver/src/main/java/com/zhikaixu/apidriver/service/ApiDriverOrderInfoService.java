@@ -84,9 +84,7 @@ public class ApiDriverOrderInfoService {
         driverGrabRequest.setReceiveOrderCarLatitude(receiveOrderCarLatitude);
         driverGrabRequest.setReceiveOrderCarLongitude(receiveOrderCarLongitude);
 
-        serviceOrderClient.driverGrab(driverGrabRequest);
-
-        return ResponseResult.success("");
+        return serviceOrderClient.driverGrab(driverGrabRequest);
     }
 
 }
