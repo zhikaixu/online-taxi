@@ -7,6 +7,7 @@ import com.zhikaixu.internalcommon.constant.IdentityConstant;
 import com.zhikaixu.internalcommon.constant.OrderConstants;
 import com.zhikaixu.internalcommon.dto.DriverCarBindingRelationship;
 import com.zhikaixu.internalcommon.dto.ResponseResult;
+import com.zhikaixu.internalcommon.request.DriverGrabRequest;
 import com.zhikaixu.internalcommon.request.OrderRequest;
 import com.zhikaixu.internalcommon.response.OrderDriverResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,9 +73,20 @@ public class ApiDriverOrderInfoService {
 
 //        orderInfo.setOrderStatus(OrderConstants.DRIVER_RECEIVE_ORDER);
         // 执行抢单动作
+        DriverGrabRequest driverGrabRequest = new DriverGrabRequest();
+        driverGrabRequest.setOrderId(orderId);
+        driverGrabRequest.setDriverId(driverId);
+        driverGrabRequest.setCarId(carId);
+        driverGrabRequest.setDriverPhone(driverPhone);
+        driverGrabRequest.setLicenseId(licenseId);
+        driverGrabRequest.setVehicleNo(vehicleNo);
+        driverGrabRequest.setVehicleType(vehicleType);
+        driverGrabRequest.setReceiveOrderCarLatitude(receiveOrderCarLatitude);
+        driverGrabRequest.setReceiveOrderCarLongitude(receiveOrderCarLongitude);
 
+        serviceOrderClient.driverGrab(driverGrabRequest);
 
-        return null;
+        return ResponseResult.success("");
     }
 
 }

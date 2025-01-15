@@ -1,6 +1,7 @@
 package com.zhikaixu.apidriver.remote;
 
 import com.zhikaixu.internalcommon.dto.ResponseResult;
+import com.zhikaixu.internalcommon.request.DriverGrabRequest;
 import com.zhikaixu.internalcommon.request.OrderRequest;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
@@ -25,4 +26,7 @@ public interface ServiceOrderClient {
 
     @RequestMapping(method = RequestMethod.POST, value = "/order/cancel")
     public ResponseResult cancel(@RequestParam Long orderId, @RequestParam String identity);
+
+    @RequestMapping(method = RequestMethod.POST, value = "/order/grab")
+    public ResponseResult driverGrab(@RequestBody DriverGrabRequest driverGrabRequest);
 }
