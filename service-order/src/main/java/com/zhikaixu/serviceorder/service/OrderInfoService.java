@@ -748,51 +748,52 @@ public class OrderInfoService {
      * @param driverGrabRequest
      * @return
      */
-    public synchronized ResponseResult grab(DriverGrabRequest driverGrabRequest) {
+    public ResponseResult grab(DriverGrabRequest driverGrabRequest) {
 
         System.out.println("请求来了：" + driverGrabRequest.getDriverId());
         Long orderId = driverGrabRequest.getOrderId();
         String orderIdStr = (orderId + "").intern();
-        synchronized (orderIdStr) {
-            OrderInfo orderInfo = orderInfoMapper.selectById(orderId);
+        // 有分布式锁时，本地锁可以去掉，不会影响结果
+//        synchronized (orderIdStr) {
+        OrderInfo orderInfo = orderInfoMapper.selectById(orderId);
 
-            if (orderInfo == null) {
-                return ResponseResult.fail(CommonStatusEnum.ORDER_NOT_EXISTS.getCode(), CommonStatusEnum.ORDER_NOT_EXISTS.getValue());
-            }
-
-            int orderStatus = orderInfo.getOrderStatus();
-            if (orderStatus != OrderConstants.ORDER_START) {
-                return ResponseResult.fail(CommonStatusEnum.ORDER_CANNOT_GRAB.getCode(), CommonStatusEnum.ORDER_CANNOT_GRAB.getValue());
-            }
-
-            try {
-                TimeUnit.SECONDS.sleep(1);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            Long driverId = driverGrabRequest.getDriverId();
-            String driverPhone = driverGrabRequest.getDriverPhone();
-            Long carId = driverGrabRequest.getCarId();
-            String licenseId = driverGrabRequest.getLicenseId();
-            String vehicleNo = driverGrabRequest.getVehicleNo();
-            String receiveOrderCarLatitude = driverGrabRequest.getReceiveOrderCarLatitude();
-            String receiveOrderCarLongitude = driverGrabRequest.getReceiveOrderCarLongitude();
-            String vehicleType = driverGrabRequest.getVehicleType();
-
-            orderInfo.setDriverId(driverId);
-            orderInfo.setDriverPhone(driverPhone);
-            orderInfo.setCarId(carId);
-            orderInfo.setLicenseId(licenseId);
-            orderInfo.setVehicleNo(vehicleNo);
-            orderInfo.setReceiveOrderCarLatitude(receiveOrderCarLatitude);
-            orderInfo.setReceiveOrderCarLongitude(receiveOrderCarLongitude);
-            orderInfo.setVehicleType(vehicleType);
-            orderInfo.setOrderStatus(OrderConstants.DRIVER_RECEIVE_ORDER);
-            orderInfo.setReceiveOrderTime(LocalDateTime.now(ZoneId.of("Asia/Shanghai")));
-
-            orderInfoMapper.updateById(orderInfo);
+        if (orderInfo == null) {
+            return ResponseResult.fail(CommonStatusEnum.ORDER_NOT_EXISTS.getCode(), CommonStatusEnum.ORDER_NOT_EXISTS.getValue());
         }
+
+        int orderStatus = orderInfo.getOrderStatus();
+        if (orderStatus != OrderConstants.ORDER_START) {
+            return ResponseResult.fail(CommonStatusEnum.ORDER_CANNOT_GRAB.getCode(), CommonStatusEnum.ORDER_CANNOT_GRAB.getValue());
+        }
+
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        Long driverId = driverGrabRequest.getDriverId();
+        String driverPhone = driverGrabRequest.getDriverPhone();
+        Long carId = driverGrabRequest.getCarId();
+        String licenseId = driverGrabRequest.getLicenseId();
+        String vehicleNo = driverGrabRequest.getVehicleNo();
+        String receiveOrderCarLatitude = driverGrabRequest.getReceiveOrderCarLatitude();
+        String receiveOrderCarLongitude = driverGrabRequest.getReceiveOrderCarLongitude();
+        String vehicleType = driverGrabRequest.getVehicleType();
+
+        orderInfo.setDriverId(driverId);
+        orderInfo.setDriverPhone(driverPhone);
+        orderInfo.setCarId(carId);
+        orderInfo.setLicenseId(licenseId);
+        orderInfo.setVehicleNo(vehicleNo);
+        orderInfo.setReceiveOrderCarLatitude(receiveOrderCarLatitude);
+        orderInfo.setReceiveOrderCarLongitude(receiveOrderCarLongitude);
+        orderInfo.setVehicleType(vehicleType);
+        orderInfo.setOrderStatus(OrderConstants.DRIVER_RECEIVE_ORDER);
+        orderInfo.setReceiveOrderTime(LocalDateTime.now(ZoneId.of("Asia/Shanghai")));
+
+        orderInfoMapper.updateById(orderInfo);
+//        }
 
         return ResponseResult.success("");
 
