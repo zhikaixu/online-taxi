@@ -748,7 +748,7 @@ public class OrderInfoService {
      * @param driverGrabRequest
      * @return
      */
-    public ResponseResult grab(DriverGrabRequest driverGrabRequest) {
+    public synchronized ResponseResult grab(DriverGrabRequest driverGrabRequest) {
 
         System.out.println("请求来了：" + driverGrabRequest.getDriverId());
 
@@ -765,7 +765,7 @@ public class OrderInfoService {
         }
 
         try {
-            TimeUnit.SECONDS.sleep(10);
+            TimeUnit.SECONDS.sleep(1);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
