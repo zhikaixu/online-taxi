@@ -5,10 +5,12 @@ import com.zhikaixu.internalcommon.constant.HeaderParamConstants;
 import com.zhikaixu.internalcommon.dto.ResponseResult;
 import com.zhikaixu.internalcommon.request.DriverGrabRequest;
 import com.zhikaixu.internalcommon.request.OrderRequest;
+import com.zhikaixu.serviceorder.service.GrabService;
 import com.zhikaixu.serviceorder.service.OrderInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Order;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -131,6 +133,11 @@ public class OrderInfoController {
         return orderInfoService.cancel(orderId, identity);
     }
 
+    @Autowired
+//    @Qualifier("grabBySingleRedisService")
+    @Qualifier("grabByMultiRedisService")
+    private GrabService grabService;
+
     /**
      * 司机抢单
      * @param driverGrabRequest
@@ -139,7 +146,7 @@ public class OrderInfoController {
     @PostMapping("/grab")
     public ResponseResult driverGrab(@RequestBody DriverGrabRequest driverGrabRequest) {
 
-        return orderInfoService.grab(driverGrabRequest);
+        return grabService.grab(driverGrabRequest);
     }
 
 }
