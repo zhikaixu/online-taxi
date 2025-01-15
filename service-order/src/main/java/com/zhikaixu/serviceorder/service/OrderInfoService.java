@@ -749,6 +749,9 @@ public class OrderInfoService {
      * @return
      */
     public ResponseResult grab(DriverGrabRequest driverGrabRequest) {
+
+        System.out.println("请求来了：" + driverGrabRequest.getDriverId());
+
         Long orderId = driverGrabRequest.getOrderId();
         OrderInfo orderInfo = orderInfoMapper.selectById(orderId);
 
@@ -759,6 +762,12 @@ public class OrderInfoService {
         int orderStatus = orderInfo.getOrderStatus();
         if (orderStatus != OrderConstants.ORDER_START) {
             return ResponseResult.fail(CommonStatusEnum.ORDER_CANNOT_GRAB.getCode(), CommonStatusEnum.ORDER_CANNOT_GRAB.getValue());
+        }
+
+        try {
+            TimeUnit.SECONDS.sleep(10);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
         Long driverId = driverGrabRequest.getDriverId();
