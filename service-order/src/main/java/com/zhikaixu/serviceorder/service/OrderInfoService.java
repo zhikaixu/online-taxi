@@ -752,7 +752,8 @@ public class OrderInfoService {
 
         System.out.println("请求来了：" + driverGrabRequest.getDriverId());
         Long orderId = driverGrabRequest.getOrderId();
-        synchronized (this) {
+        String orderIdStr = (orderId + "").intern();
+        synchronized (orderIdStr) {
             OrderInfo orderInfo = orderInfoMapper.selectById(orderId);
 
             if (orderInfo == null) {
