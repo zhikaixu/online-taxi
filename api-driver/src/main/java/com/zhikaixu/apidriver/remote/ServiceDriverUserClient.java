@@ -2,6 +2,7 @@ package com.zhikaixu.apidriver.remote;
 
 import com.zhikaixu.internalcommon.dto.*;
 import com.zhikaixu.internalcommon.response.DriverUserExistsResponse;
+import com.zhikaixu.internalcommon.response.OrderDriverResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,4 +23,7 @@ public interface ServiceDriverUserClient {
 
     @GetMapping("/driver-car-binding-relationship")
     public ResponseResult<DriverCarBindingRelationship> getDriverCarRelationship(@RequestParam String driverPhone);
+
+    @GetMapping("/get-available-driver/{carId}")
+    public ResponseResult<OrderDriverResponse> getAvailableDriver(@PathVariable("carId") Long carId);
 }

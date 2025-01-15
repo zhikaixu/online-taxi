@@ -32,7 +32,10 @@ public class OrderController {
         String phone = tokenResult.getPhone();
         Long orderId = orderRequest.getOrderId();
 
-        return ResponseResult.success("");
+        String receiveOrderCarLongitude = orderRequest.getReceiveOrderCarLongitude();
+        String receiveOrderCarLatitude = orderRequest.getReceiveOrderCarLatitude();
+
+        return apiDriverOrderInfoService.grab(phone, orderId, receiveOrderCarLongitude, receiveOrderCarLatitude);
     }
 
     /**
@@ -46,24 +49,44 @@ public class OrderController {
         return apiDriverOrderInfoService.toPickUpPassenger(orderRequest);
     }
 
+    /**
+     * 到达乘客起点
+     * @param orderRequest
+     * @return
+     */
     @PostMapping("/arrived-departure")
     public ResponseResult arrivedDeparture(@RequestBody OrderRequest orderRequest) {
 
         return apiDriverOrderInfoService.arrivedDeparture(orderRequest);
     }
 
+    /**
+     * 司机接到乘客
+     * @param orderRequest
+     * @return
+     */
     @PostMapping("/pick-up-passenger")
     public ResponseResult pickUpPassenger(@RequestBody OrderRequest orderRequest) {
 
         return apiDriverOrderInfoService.pickUpPassenger(orderRequest);
     }
 
+    /**
+     * 乘客下车
+     * @param orderRequest
+     * @return
+     */
     @PostMapping("/passenger-get-off")
     public ResponseResult passengerGetOff(@RequestBody OrderRequest orderRequest) {
 
         return apiDriverOrderInfoService.passengerGetOff(orderRequest);
     }
 
+    /**
+     * 取消订单
+     * @param orderId
+     * @return
+     */
     @PostMapping("/cancel")
     public ResponseResult cancel(@RequestParam Long orderId) {
 
