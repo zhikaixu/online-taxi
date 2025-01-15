@@ -3,6 +3,7 @@ package com.zhikaixu.serviceorder.controller;
 
 import com.zhikaixu.internalcommon.constant.HeaderParamConstants;
 import com.zhikaixu.internalcommon.dto.ResponseResult;
+import com.zhikaixu.internalcommon.request.DriverGrabRequest;
 import com.zhikaixu.internalcommon.request.OrderRequest;
 import com.zhikaixu.serviceorder.service.OrderInfoService;
 import lombok.extern.slf4j.Slf4j;
@@ -128,6 +129,17 @@ public class OrderInfoController {
     public ResponseResult cancel(@RequestParam Long orderId, @RequestParam String identity) {
 
         return orderInfoService.cancel(orderId, identity);
+    }
+
+    /**
+     * 司机抢单
+     * @param driverGrabRequest
+     * @return
+     */
+    @PostMapping("/grab")
+    public ResponseResult driverGrab(@RequestBody DriverGrabRequest driverGrabRequest) {
+
+        return orderInfoService.grab(driverGrabRequest);
     }
 
 }

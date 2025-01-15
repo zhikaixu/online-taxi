@@ -11,6 +11,7 @@ import com.zhikaixu.internalcommon.dto.Car;
 import com.zhikaixu.internalcommon.dto.OrderInfo;
 import com.zhikaixu.internalcommon.dto.PriceRule;
 import com.zhikaixu.internalcommon.dto.ResponseResult;
+import com.zhikaixu.internalcommon.request.DriverGrabRequest;
 import com.zhikaixu.internalcommon.request.OrderRequest;
 import com.zhikaixu.internalcommon.response.OrderDriverResponse;
 import com.zhikaixu.internalcommon.response.TerminalResponse;
@@ -32,6 +33,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -739,5 +741,40 @@ public class OrderInfoService {
 
         orderInfoMapper.updateById(orderInfo);
         return ResponseResult.success("");
+    }
+
+    /**
+     * 司机抢单
+     * @param driverGrabRequest
+     * @return
+     */
+    public ResponseResult grab(DriverGrabRequest driverGrabRequest) {
+        Long orderId = driverGrabRequest.getOrderId();
+        OrderInfo orderInfo = orderInfoMapper.selectById(orderId);
+
+        Long driverId = driverGrabRequest.getDriverId();
+        String driverPhone = driverGrabRequest.getDriverPhone();
+        Long carId = driverGrabRequest.getCarId();
+        String licenseId = driverGrabRequest.getLicenseId();
+        String vehicleNo = driverGrabRequest.getVehicleNo();
+        String receiveOrderCarLatitude = driverGrabRequest.getReceiveOrderCarLatitude();
+        String receiveOrderCarLongitude = driverGrabRequest.getReceiveOrderCarLongitude();
+        String vehicleType = driverGrabRequest.getVehicleType();
+
+        orderInfo.setDriverId(driverId);
+        orderInfo.setDriverPhone(driverPhone);
+        orderInfo.setCarId(carId);
+        orderInfo.setLicenseId(licenseId);
+        orderInfo.setVehicleNo(vehicleNo);
+        orderInfo.setReceiveOrderCarLatitude(receiveOrderCarLatitude);
+        orderInfo.setReceiveOrderCarLongitude(receiveOrderCarLongitude);
+        orderInfo.setVehicleType(vehicleType);
+        orderInfo.setOrderStatus(OrderConstants.DRIVER_RECEIVE_ORDER);
+        orderInfo.setReceiveOrderTime(LocalDateTime.now(ZoneId.of("Asia/Shanghai")));
+
+        orderInfoMapper.updateById(orderInfo);
+
+        return ResponseResult.success("");
+
     }
 }
