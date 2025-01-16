@@ -12,14 +12,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
 
-@Service("grabByRedissonBasicService")
-public class GrabByRedissonBasicServiceImpl implements GrabService {
+@Service("grabByRedissonBasicYamlService")
+public class GrabByRedissonBasicYamlServiceImpl implements GrabService {
 
     @Autowired
     private OrderInfoService orderInfoService;
 
     @Autowired
-    @Qualifier("redissonBootYml")
+    @Qualifier("redissonYamlClient")
     private RedissonClient redissonClient;
 
     @Override
@@ -31,11 +31,11 @@ public class GrabByRedissonBasicServiceImpl implements GrabService {
         lock.lock();
 
         System.out.println("开始锁redis redisson basic");
-        try {
-            TimeUnit.SECONDS.sleep(10);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            TimeUnit.SECONDS.sleep(10);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
         ResponseResult grab = orderInfoService.grab(driverGrabRequest);
         System.out.println("结束锁redis redisson basic");
         lock.unlock();

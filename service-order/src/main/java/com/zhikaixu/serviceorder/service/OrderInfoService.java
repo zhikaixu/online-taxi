@@ -28,6 +28,7 @@ import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -270,6 +271,7 @@ public class OrderInfoService {
     private ServiceMapClient serviceMapClient;
 
     @Autowired
+    @Qualifier("redissonBootYml")
     private RedissonClient redissonClient;
 
     @Autowired
