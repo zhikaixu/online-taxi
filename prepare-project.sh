@@ -6,9 +6,14 @@
 redis-cli -p 6379 shutdown
 redis-cli -p 6380 shutdown
 redis-cli -p 6381 shutdown
+redis-cli -p 26379 shutdown
+redis-cli -p 26380 shutdown
+redis-cli -p 26381 shutdown
 redis-server /usr/local/etc/redis-6379-master/redis-6379.conf &
 redis-server /usr/local/etc/redis-6380-slave/redis-6380.conf &
 redis-server /usr/local/etc/redis-6381-slave/redis-6381.conf &
-
+redis-server /usr/local/etc/redis-6379-master-sentinel/redis-sentinel-6379.conf --sentinel &
+redis-server /usr/local/etc/redis-6380-slave-sentinel/redis-sentinel-6380.conf --sentinel &
+redis-server /usr/local/etc/redis-6381-slave-sentinel/redis-sentinel-6381.conf --sentinel &
 # ngrok
 ngrok http http://localhost:9001
