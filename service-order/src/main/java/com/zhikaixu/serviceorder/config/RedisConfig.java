@@ -53,4 +53,15 @@ public class RedisConfig {
         return Redisson.create(config);
     }
 
+    @Bean("redissonSentinelClient")
+    public RedissonClient redissonSentinelClient() {
+        Config config = null;
+        try {
+            config = Config.fromYAML(new ClassPathResource("/redisson-config/sentinel-server.yaml").getInputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return Redisson.create(config);
+    }
+
 }
