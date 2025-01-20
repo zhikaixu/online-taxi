@@ -139,7 +139,8 @@ public class OrderInfoController {
 //    @Qualifier("grabByRedisDiyService")
 //    @Qualifier("grabByRedisLuaService")
 //    @Qualifier("grabByRedissonBasicService")
-    @Qualifier("grabByRedissonBasicYamlService")
+//    @Qualifier("grabByRedissonBasicYamlService")
+    @Qualifier("grabByRedissonMasterSlaveYamlService")
     private GrabService grabService;
 
     /**

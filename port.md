@@ -1,7 +1,9 @@
 | 服务名                      | 端口号  |
 |--------------------------|------|
 | nacos                    | 8848 |
-| redis                    | 6379 |
+| redis-master             | 6379 |
+| redis-slave1             | 6380 |
+| redis-slave2             | 6381 |
 | mysql                    | 3306 |
 | api-passenger            | 8081 |
 | service-verificationcode | 8082 |

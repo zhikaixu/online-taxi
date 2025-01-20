@@ -33,11 +33,23 @@ public class RedisConfig {
     public RedissonClient redissonYamlClient() {
         Config config = null;
         try {
-            config = Config.fromYAML(new ClassPathResource("redisson-config/single-server.yaml").getInputStream());
+            config = Config.fromYAML(new ClassPathResource("/redisson-config/single-server.yaml").getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        return Redisson.create(config);
+    }
+
+    @Bean("redissonMasterSlaveClient")
+    public RedissonClient redissonMasterSlaveClient() {
+        Config config = null;
+        try {
+            config = Config.fromYAML(new ClassPathResource("/redisson-config/master-slave-server.yaml").getInputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+//        config.useMasterSlaveServers();
         return Redisson.create(config);
     }
 
