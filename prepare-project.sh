@@ -15,5 +15,28 @@ redis-server /usr/local/etc/redis-6381-slave/redis-6381.conf &
 redis-server /usr/local/etc/redis-6379-master-sentinel/redis-sentinel-6379.conf --sentinel &
 redis-server /usr/local/etc/redis-6380-slave-sentinel/redis-sentinel-6380.conf --sentinel &
 redis-server /usr/local/etc/redis-6381-slave-sentinel/redis-sentinel-6381.conf --sentinel &
+
+#redis cluster
+redis-cli -p 30001 shutdown
+redis-cli -p 30002 shutdown
+redis-cli -p 30003 shutdown
+redis-cli -p 30004 shutdown
+redis-cli -p 30005 shutdown
+redis-cli -p 30006 shutdown
+
+cd /usr/local/etc/redis-cluster/node1
+redis-server /usr/local/etc/redis-cluster/node1/node1.conf &
+cd /usr/local/etc/redis-cluster/node2
+redis-server /usr/local/etc/redis-cluster/node2/node2.conf &
+cd /usr/local/etc/redis-cluster/node3
+redis-server /usr/local/etc/redis-cluster/node3/node3.conf &
+cd /usr/local/etc/redis-cluster/node4
+redis-server /usr/local/etc/redis-cluster/node4/node4.conf &
+cd /usr/local/etc/redis-cluster/node5
+redis-server /usr/local/etc/redis-cluster/node5/node5.conf &
+cd /usr/local/etc/redis-cluster/node6
+redis-server /usr/local/etc/redis-cluster/node6/node6.conf &
+cd /usr/local/etc/redis-cluster
+redis-cli --cluster create 127.0.0.1:30001 127.0.0.1:30002 127.0.0.1:30003 127.0.0.1:30004 127.0.0.1:30005 127.0.0.1:30006 --cluster-replicas 1
 # ngrok
 ngrok http http://localhost:9001
