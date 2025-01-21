@@ -142,7 +142,8 @@ public class OrderInfoController {
 //    @Qualifier("grabByRedissonBasicYamlService")
 //    @Qualifier("grabByRedissonMasterSlaveYamlService")
 //    @Qualifier("grabByRedissonSentinelYamlService")
-    @Qualifier("grabByRedissonClusterYamlService")
+//    @Qualifier("grabByRedissonClusterYamlService")
+    @Qualifier("grabByRedissonRedLockService")
     private GrabService grabService;
 
     /**
