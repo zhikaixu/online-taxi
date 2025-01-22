@@ -17,6 +17,9 @@ spring:
     host: 127.0.0.1
     port: 6379
     database: 0
+zookeeper:
+  address: localhost:2181
+  timeout: 100000
 logging:
   level:
     com.baomidou: debug

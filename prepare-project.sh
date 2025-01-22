@@ -62,8 +62,8 @@ redis-server /usr/local/etc/redis.conf &
 #redis-server /usr/local/etc/redis-redlock/redis-6383/redis-6383.conf &
 
 # ngrok
-ngrok http http://localhost:9001
+#ngrok http http://localhost:9001
 
 #zookeeper
 /Users/zhikaixu/Desktop/apache-zookeeper-3.8.4-bin/bin/zkServer.sh start
-/Users/zhikaixu/Desktop/apache-zookeeper-3.8.4-bin/bin/zkCli.sh -server 127.0.0.1:2181
+#/Users/zhikaixu/Desktop/apache-zookeeper-3.8.4-bin/bin/zkCli.sh -server 127.0.0.1:2181
