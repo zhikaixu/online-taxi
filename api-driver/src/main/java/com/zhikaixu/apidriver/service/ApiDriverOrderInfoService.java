@@ -64,7 +64,7 @@ public class ApiDriverOrderInfoService {
         Long carId = driverCarBindingRelationship.getCarId();
 
         ResponseResult<OrderDriverResponse> availableDriverResult = serviceDriverUserClient.getAvailableDriver(carId);
-        if (availableDriverResult == null) {
+        if (availableDriverResult == null || availableDriverResult.getData() == null) {
             return ResponseResult.fail(CommonStatusEnum.CAR_NOT_EXISTS.getCode(), CommonStatusEnum.CAR_NOT_EXISTS.getValue());
         }
 
