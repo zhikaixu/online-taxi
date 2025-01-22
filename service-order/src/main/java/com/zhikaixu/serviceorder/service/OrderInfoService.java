@@ -17,6 +17,8 @@ import com.zhikaixu.internalcommon.response.OrderDriverResponse;
 import com.zhikaixu.internalcommon.response.TerminalResponse;
 import com.zhikaixu.internalcommon.response.TrsearchResponse;
 import com.zhikaixu.internalcommon.util.RedisPrefixUtils;
+import com.zhikaixu.serviceorder.entity.DriverOrderStatistics;
+import com.zhikaixu.serviceorder.mapper.DriverOrderStatisticsMapper;
 import com.zhikaixu.serviceorder.mapper.OrderInfoMapper;
 import com.zhikaixu.serviceorder.remote.ServiceDriverUserClient;
 import com.zhikaixu.serviceorder.remote.ServiceMapClient;
@@ -33,6 +35,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -745,6 +748,10 @@ public class OrderInfoService {
         return ResponseResult.success("");
     }
 
+
+    @Autowired
+    private DriverOrderStatisticsMapper driverOrderStatisticsMapper;
+
     /**
      * 司机抢单
      * @param driverGrabRequest
@@ -796,6 +803,24 @@ public class OrderInfoService {
 
         orderInfoMapper.updateById(orderInfo);
 //        }
+
+        // 添加司机当天抢单成功的数量
+        // 先查询当天的数据
+        // 再更新
+        QueryWrapper<DriverOrderStatistics> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("grab_order_date", LocalDate.now(ZoneId.of("Asia/Shanghai")));
+        queryWrapper.eq("driver_id", driverId);
+        DriverOrderStatistics driverOrderStatistics = driverOrderStatisticsMapper.selectOne(queryWrapper);
+        if (driverOrderStatistics == null) {
+            driverOrderStatistics = new DriverOrderStatistics();
+            driverOrderStatistics.setGrabOrderDate(LocalDate.now(ZoneId.of("Asia/Shanghai")));
+            driverOrderStatistics.setGrabOrderSuccessCount(1);
+            driverOrderStatistics.setDriverId(driverId);
+            driverOrderStatisticsMapper.insert(driverOrderStatistics);
+        } else {
+            driverOrderStatistics.setGrabOrderSuccessCount(driverOrderStatistics.getGrabOrderSuccessCount() + 1);
+            driverOrderStatisticsMapper.updateById(driverOrderStatistics);
+        }
 
         return ResponseResult.success("");
 

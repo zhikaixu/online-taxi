@@ -21,7 +21,7 @@ public class MysqlGenerator {
                             "/Users/zhikaixu/Desktop/online-taxi-backup/service-order/src/main/java/com/zhikaixu/serviceorder/mapper"));
                 })
                 .strategyConfig(builder -> {
-                    builder.addInclude("order_info");
+                    builder.addInclude("driver_order_statistics");
                 })
                 .templateEngine(new FreemarkerTemplateEngine())
                 .execute();
