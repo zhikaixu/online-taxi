@@ -5,6 +5,7 @@ import com.zhikaixu.internalcommon.dto.ResponseResult;
 import com.zhikaixu.servicedriveruser.mapper.DriverUserWorkStatusMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +25,7 @@ public class DriverUserWorkStatusService {
     @Autowired
     private DriverUserWorkStatusMapper driverUserWorkStatusMapper;
 
+    @Transactional
     public ResponseResult changeWorkStatus(Long driverId, Integer workStatus) {
 
         Map<String, Object> queryMap = new HashMap<>();

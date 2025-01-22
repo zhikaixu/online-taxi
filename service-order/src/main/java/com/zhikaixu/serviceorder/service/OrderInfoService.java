@@ -33,6 +33,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDate;
@@ -757,6 +759,7 @@ public class OrderInfoService {
      * @param driverGrabRequest
      * @return
      */
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public ResponseResult grab(DriverGrabRequest driverGrabRequest) {
 
         System.out.println("请求来了：" + driverGrabRequest.getDriverId());

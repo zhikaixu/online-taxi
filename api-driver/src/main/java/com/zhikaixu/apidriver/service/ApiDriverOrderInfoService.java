@@ -15,6 +15,7 @@ import com.zhikaixu.internalcommon.response.OrderDriverResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -90,12 +91,11 @@ public class ApiDriverOrderInfoService {
         if (responseResult.getCode()!=CommonStatusEnum.SUCCESS.getCode()) {
             return ResponseResult.fail(CommonStatusEnum.ORDER_UPDATE_ERROR.getCode(), CommonStatusEnum.ORDER_UPDATE_ERROR.getValue());
         }
-
         // 修改司机工作状态
         DriverUserWorkStatus driverUserWorkStatus = new DriverUserWorkStatus();
         driverUserWorkStatus.setDriverId(driverId);
         driverUserWorkStatus.setWorkStatus(DriverCarConstants.DRIVER_WORK_STATUS_SERVING);
-
+        int i = 1 / 0;
         responseResult = serviceDriverUserClient.changeWorkStatus(driverUserWorkStatus);
 
         if (responseResult.getCode()!=CommonStatusEnum.SUCCESS.getCode()) {
