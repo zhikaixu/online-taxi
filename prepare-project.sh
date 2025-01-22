@@ -72,3 +72,6 @@ redis-server /usr/local/etc/redis.conf &
 /Users/zhikaixu/Desktop/zookeeper/zookeeper1/apache-zookeeper-3.8.4-bin/bin/zkServer.sh start
 /Users/zhikaixu/Desktop/zookeeper/zookeeper2/apache-zookeeper-3.8.4-bin/bin/zkServer.sh start
 /Users/zhikaixu/Desktop/zookeeper/zookeeper3/apache-zookeeper-3.8.4-bin/bin/zkServer.sh start
+
+#seata server
+/Users/zhikaixu/Desktop/seata-1.4.2/seata-server-1.4.2/bin/seata-server.sh

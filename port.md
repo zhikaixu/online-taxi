@@ -16,4 +16,11 @@
 | service-order            | 8089 |
 |                          |      |
 | sse-driver-client-web    | 9000 |
+| ngrok                    | 9001 |
+|                          |      |
+| seata-tc                 | 8091 |
+|                          |      |
+| zookeeper1               | 2181 |
+| zookeeper2               | 2182 |
+| zookeeper3               | 2183 |
 
