@@ -144,7 +144,8 @@ public class OrderInfoController {
 //    @Qualifier("grabByRedissonSentinelYamlService")
 //    @Qualifier("grabByRedissonClusterYamlService")
 //    @Qualifier("grabByRedissonRedLockService")
-    @Qualifier("grabByZookeeperDiyService")
+//    @Qualifier("grabByZookeeperDiyService")
+    @Qualifier("grabByZookeeperCuratorService")
     private GrabService grabService;
 
     /**
