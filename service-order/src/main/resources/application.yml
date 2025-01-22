@@ -17,15 +17,24 @@ spring:
     host: 127.0.0.1
     port: 6379
     database: 0
-zookeeper:
-  address: localhost:2181,localhost:2182,localhost:2183
-  timeout: 100000
+
 logging:
   level:
     com.baomidou: debug
+
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+zookeeper:
+  address: localhost:2181,localhost:2182,localhost:2183
+  timeout: 100000
+
+seata:
+  service:
+    vgroup-mapping.my_tx: seata-tc
+    grouplist.seata-tc: 127.0.0.1:8091
+  tx-service-group: my_tx
 
 ---
 spring:

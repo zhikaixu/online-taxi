@@ -5,6 +5,7 @@ import com.zhikaixu.internalcommon.dto.ResponseResult;
 import com.zhikaixu.internalcommon.dto.TokenResult;
 import com.zhikaixu.internalcommon.request.OrderRequest;
 import com.zhikaixu.internalcommon.util.JwtUtils;
+import io.seata.spring.annotation.GlobalTransactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +25,7 @@ public class OrderController {
      * @return
      */
     @PostMapping("/grab")
+    @GlobalTransactional
     public ResponseResult grab(@RequestBody OrderRequest orderRequest, HttpServletRequest httpServletRequest) {
         String token = httpServletRequest.getHeader("Authorization");
 

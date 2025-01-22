@@ -95,7 +95,7 @@ public class ApiDriverOrderInfoService {
         DriverUserWorkStatus driverUserWorkStatus = new DriverUserWorkStatus();
         driverUserWorkStatus.setDriverId(driverId);
         driverUserWorkStatus.setWorkStatus(DriverCarConstants.DRIVER_WORK_STATUS_SERVING);
-        int i = 1 / 0;
+
         responseResult = serviceDriverUserClient.changeWorkStatus(driverUserWorkStatus);
 
         if (responseResult.getCode()!=CommonStatusEnum.SUCCESS.getCode()) {

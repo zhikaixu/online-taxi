@@ -27,7 +27,6 @@ public class DriverUserWorkStatusService {
 
     @Transactional
     public ResponseResult changeWorkStatus(Long driverId, Integer workStatus) {
-
         Map<String, Object> queryMap = new HashMap<>();
         queryMap.put("driver_id", driverId);
         List<DriverUserWorkStatus> driverUserWorkStatuses = driverUserWorkStatusMapper.selectByMap(queryMap);

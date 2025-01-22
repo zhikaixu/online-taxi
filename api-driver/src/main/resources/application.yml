@@ -8,3 +8,9 @@ spring:
         server-addr: 127.0.0.1:8848
   application:
     name: api-driver
+
+seata:
+  service:
+    vgroup-mapping.my_tx: seata-tc
+    grouplist.seata-tc: 127.0.0.1:8091
+  tx-service-group: my_tx
