@@ -18,7 +18,9 @@
 | sse-driver-client-web    | 9000 |
 | ngrok                    | 9001 |
 |                          |      |
-| seata-tc                 | 8091 |
+| seata-tc 1               | 8101 |
+| seata-tc 2               | 8102 |
+| seata-tc 3               | 8103 |
 |                          |      |
 | zookeeper1               | 2181 |
 | zookeeper2               | 2182 |

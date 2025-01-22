@@ -26,5 +26,5 @@ mybatis-plus:
 seata:
   service:
     vgroup-mapping.my_tx: seata-tc
-    grouplist.seata-tc: 127.0.0.1:8091
+    grouplist.seata-tc: 127.0.0.1:8101;127.0.0.1:8102;127.0.0.1:8103
   tx-service-group: my_tx
