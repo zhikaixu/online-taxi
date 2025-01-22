@@ -64,6 +64,11 @@ redis-server /usr/local/etc/redis.conf &
 # ngrok
 #ngrok http http://localhost:9001
 
-#zookeeper
+#zookeeper single
 /Users/zhikaixu/Desktop/apache-zookeeper-3.8.4-bin/bin/zkServer.sh start
 #/Users/zhikaixu/Desktop/apache-zookeeper-3.8.4-bin/bin/zkCli.sh -server 127.0.0.1:2181
+
+#zookeeper cluster
+/Users/zhikaixu/Desktop/zookeeper/zookeeper1/apache-zookeeper-3.8.4-bin/bin/zkServer.sh start
+/Users/zhikaixu/Desktop/zookeeper/zookeeper2/apache-zookeeper-3.8.4-bin/bin/zkServer.sh start
+/Users/zhikaixu/Desktop/zookeeper/zookeeper3/apache-zookeeper-3.8.4-bin/bin/zkServer.sh start

@@ -11,3 +11,7 @@ redis-cli -p 26381 shutdown
 
 #zookeeper
 /Users/zhikaixu/Desktop/apache-zookeeper-3.8.4-bin/bin/zkServer.sh stop
+
+/Users/zhikaixu/Desktop/zookeeper/zookeeper1/apache-zookeeper-3.8.4-bin/bin/zkServer.sh stop
+/Users/zhikaixu/Desktop/zookeeper/zookeeper2/apache-zookeeper-3.8.4-bin/bin/zkServer.sh stop
+/Users/zhikaixu/Desktop/zookeeper/zookeeper3/apache-zookeeper-3.8.4-bin/bin/zkServer.sh stop

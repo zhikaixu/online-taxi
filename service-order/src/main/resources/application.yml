@@ -18,7 +18,7 @@ spring:
     port: 6379
     database: 0
 zookeeper:
-  address: localhost:2181
+  address: localhost:2181,localhost:2182,localhost:2183
   timeout: 100000
 logging:
   level:
