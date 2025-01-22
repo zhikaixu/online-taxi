@@ -3,9 +3,11 @@ package com.zhikaixu.apidriver.service;
 import com.zhikaixu.apidriver.remote.ServiceDriverUserClient;
 import com.zhikaixu.apidriver.remote.ServiceOrderClient;
 import com.zhikaixu.internalcommon.constant.CommonStatusEnum;
+import com.zhikaixu.internalcommon.constant.DriverCarConstants;
 import com.zhikaixu.internalcommon.constant.IdentityConstant;
 import com.zhikaixu.internalcommon.constant.OrderConstants;
 import com.zhikaixu.internalcommon.dto.DriverCarBindingRelationship;
+import com.zhikaixu.internalcommon.dto.DriverUserWorkStatus;
 import com.zhikaixu.internalcommon.dto.ResponseResult;
 import com.zhikaixu.internalcommon.request.DriverGrabRequest;
 import com.zhikaixu.internalcommon.request.OrderRequest;
@@ -84,7 +86,23 @@ public class ApiDriverOrderInfoService {
         driverGrabRequest.setReceiveOrderCarLatitude(receiveOrderCarLatitude);
         driverGrabRequest.setReceiveOrderCarLongitude(receiveOrderCarLongitude);
 
-        return serviceOrderClient.driverGrab(driverGrabRequest);
+        ResponseResult responseResult = serviceOrderClient.driverGrab(driverGrabRequest);
+        if (responseResult.getCode()!=CommonStatusEnum.SUCCESS.getCode()) {
+            return ResponseResult.fail(CommonStatusEnum.ORDER_UPDATE_ERROR.getCode(), CommonStatusEnum.ORDER_UPDATE_ERROR.getValue());
+        }
+
+        // 修改司机工作状态
+        DriverUserWorkStatus driverUserWorkStatus = new DriverUserWorkStatus();
+        driverUserWorkStatus.setDriverId(driverId);
+        driverUserWorkStatus.setWorkStatus(DriverCarConstants.DRIVER_WORK_STATUS_SERVING);
+
+        responseResult = serviceDriverUserClient.changeWorkStatus(driverUserWorkStatus);
+
+        if (responseResult.getCode()!=CommonStatusEnum.SUCCESS.getCode()) {
+            return ResponseResult.fail(CommonStatusEnum.DRIVER_STATUS_UPDATE_ERROR.getCode(), CommonStatusEnum.DRIVER_CAR_BIND_EXISTS.getValue());
+        }
+
+        return responseResult.success("");
     }
 
 }
