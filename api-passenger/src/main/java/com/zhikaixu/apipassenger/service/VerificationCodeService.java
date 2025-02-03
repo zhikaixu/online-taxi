@@ -57,33 +57,33 @@ public class VerificationCodeService {
      * @return
      */
     public ResponseResult checkCode(String passengerPhone, String verificationCode) {
-//        // 1. 根据手机号，去Redis读取验证码
-//        System.out.println("根据手机号，去Redis读取验证码");
-//
-//        // 生成key
-//        String key = RedisPrefixUtils.generateKeyByPhone(passengerPhone, IdentityConstant.PASSENGER_IDENTITY);
-//
-//        // 根据key获取value
-//        String codeRedis = stringRedisTemplate.opsForValue().get(key);
-//        System.out.println("redis中的value: " + codeRedis);
-//
-//        // 2. 校验验证码
-//        System.out.println("校验验证码");
-//        if (StringUtils.isBlank(codeRedis)) {
-//            return ResponseResult.fail(CommonStatusEnum.VERIFICATION_CODE_ERROR.getCode(), CommonStatusEnum.VERIFICATION_CODE_ERROR.getValue());
-//        }
-//        if (!verificationCode.trim().equals(codeRedis.trim())) {
-//            return ResponseResult.fail(CommonStatusEnum.VERIFICATION_CODE_ERROR.getCode(), CommonStatusEnum.VERIFICATION_CODE_ERROR.getValue());
-//        }
-//
-//        // 3. 判断原来是否有用户，并做对应处理
-//        VerificationCodeDTO verificationCodeDTO = new VerificationCodeDTO();
-//        verificationCodeDTO.setPassengerPhone(passengerPhone);
-//        try {
-//            servicePassengerUserClient.loginOrRegister(verificationCodeDTO);
-//        } catch (RuntimeException e) {
-//            return ResponseResult.fail(CommonStatusEnum.CALL_USER_ADD_ERROR.getCode(), CommonStatusEnum.CALL_USER_ADD_ERROR.getValue());
-//        }
+        // 1. 根据手机号，去Redis读取验证码
+        System.out.println("根据手机号，去Redis读取验证码");
+
+        // 生成key
+        String key = RedisPrefixUtils.generateKeyByPhone(passengerPhone, IdentityConstant.PASSENGER_IDENTITY);
+
+        // 根据key获取value
+        String codeRedis = stringRedisTemplate.opsForValue().get(key);
+        System.out.println("redis中的value: " + codeRedis);
+
+        // 2. 校验验证码
+        System.out.println("校验验证码");
+        if (StringUtils.isBlank(codeRedis)) {
+            return ResponseResult.fail(CommonStatusEnum.VERIFICATION_CODE_ERROR.getCode(), CommonStatusEnum.VERIFICATION_CODE_ERROR.getValue());
+        }
+        if (!verificationCode.trim().equals(codeRedis.trim())) {
+            return ResponseResult.fail(CommonStatusEnum.VERIFICATION_CODE_ERROR.getCode(), CommonStatusEnum.VERIFICATION_CODE_ERROR.getValue());
+        }
+
+        // 3. 判断原来是否有用户，并做对应处理
+        VerificationCodeDTO verificationCodeDTO = new VerificationCodeDTO();
+        verificationCodeDTO.setPassengerPhone(passengerPhone);
+        try {
+            servicePassengerUserClient.loginOrRegister(verificationCodeDTO);
+        } catch (RuntimeException e) {
+            return ResponseResult.fail(CommonStatusEnum.CALL_USER_ADD_ERROR.getCode(), CommonStatusEnum.CALL_USER_ADD_ERROR.getValue());
+        }
         // 4. 颁发令牌
         String accessToken = JwtUtils.generatorToken(passengerPhone, IdentityConstant.PASSENGER_IDENTITY, TokenConstants.ACCESS_TOKEN_TYPE);
         String refreshToken = JwtUtils.generatorToken(passengerPhone, IdentityConstant.PASSENGER_IDENTITY, TokenConstants.REFRESH_TOKEN_TYPE);
