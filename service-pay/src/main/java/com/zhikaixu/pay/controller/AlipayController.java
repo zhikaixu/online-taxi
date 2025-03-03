@@ -60,10 +60,6 @@ public class AlipayController {
 
         return "success";
     }
-
-    @GetMapping("/huchenhao")
-    public String testMaoMao(HttpServletRequest request) {
-        return "阿琛琛博晨勃勃起烂琛";
-    }
+    
 
 }
